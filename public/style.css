@@ -1855,3 +1855,44 @@ input[type="text"]::placeholder, textarea::placeholder {
   color: var(--text-main);
 }
 
+/* Language Toggle Button */
+.lang-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--border-subtle);
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-main);
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: all 0.15s ease;
+  font-family: inherit;
+}
+
+.lang-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
+  transform: translateY(-1px);
+}
+
+.lang-toggle-btn:active {
+  transform: scale(0.96);
+}
+
+.lang-toggle-btn .lang-flag {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.lang-toggle-btn .lang-text {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+

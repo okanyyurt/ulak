@@ -80,6 +80,415 @@
   let myDeviceName = getStoredDeviceName();
   const myDeviceColor = getDeviceColor(myDeviceId);
 
+  // =============================================================
+  // INTERNATIONALIZATION (i18n) SYSTEM
+  // =============================================================
+  const I18N = {
+    tr: {
+      lang_name: "TR",
+      lang_flag: "🇹🇷",
+      switch_btn: "EN 🇬🇧",
+      switch_title: "Switch to English",
+      badge_tag: "Hızlı & Geçici Pano",
+      device_pill_title: "Cihaz adınızı değiştirmek için tıklayın",
+      default_device_name: "Cihazım",
+      landing_title_1: "Cihazlar Arasında",
+      landing_title_2: "Işık Hızında",
+      landing_title_3: "Paylaşın",
+      landing_subtitle: "Üyelik yok, kayıt yok. Yazı, bağlantı ve fotoğrafları bilgisayarlarınız ve telefonunuz arasında anında eşitleyin.",
+      create_card_title: "Yeni Paylaşım Oturumu Başlat",
+      ttl_hint: "Süre bitiminde tüm veriler bellekten silinir",
+      ttl_opt_burn: "Okunur Okunmaz",
+      ttl_opt_burn_desc: "Görüldükten 60sn sonra",
+      ttl_opt_15m: "15 Dakika",
+      ttl_opt_15m_desc: "Hızlı transfer",
+      ttl_opt_1h: "1 Saat",
+      ttl_opt_1h_desc: "Önerilen",
+      ttl_opt_8h: "8 Saat",
+      ttl_opt_8h_desc: "Mesai süresince",
+      ttl_opt_24h: "1 Gün",
+      ttl_opt_24h_desc: "24 saat sakla",
+      custom_room_label: "Özel Oda Adı (İsteğe Bağlı):",
+      custom_room_placeholder: "1a23, 123a (boş bırakırsanız 4 haneli kod verilir)",
+      btn_create_room: "Hemen Oturumu Başlat",
+      divider_or: "VEYA VAR OLAN BİR ODAYA GİRİN",
+      join_input_placeholder: "Oda Kodu (örn: 1a23, 123a) veya tam link...",
+      btn_join: "Katıl",
+      feat_1_title: "Sıfır Disk İzi",
+      feat_1_desc: "Hiçbir veri sunucu diskine yazılmaz. Yalnızca geçici RAM'de tutulur, süre dolunca buharlaşır.",
+      feat_2_title: "Kısa Link & QR Kod",
+      feat_2_desc: "Kamerayı QR koda tutun veya <code>/chat/a123</code> gibi kısa linkle anında aynı odaya bağlanın.",
+      feat_3_title: "Gerçek Zamanlı Eşzamanlama",
+      feat_3_desc: "Bir cihazdan eklenen metin, link veya fotoğraf diğer cihazlara anında yansır.",
+      security_banner_text: "<strong>Önemli Yasal Bildirim:</strong> Ulak geçici ve deneysel bir anlık aktarım aracıdır. Uçtan uca mutlak gizlilik garanti edilmez. Şifre, kredi kartı veya özel/gizli bilgilerinizi kesinlikle paylaşmayınız. İllegal içerik paylaşımı kesinlikle yasaktır; tüm hukuki ve cezai sorumluluk kullanıcıya aittir.",
+      btn_legal_terms: "Yasal Şartlar & Sorumluluk Reddi",
+      footer_privacy: "Gizlilik Bildirimi",
+      footer_terms: "Kullanım Şartları",
+      footer_disclaimer: "Sorumluluk Reddi",
+      footer_copy: "Ulak — RAM üzerinde çalışan geçici ve anlık veri aktarım servisi. Sunucuda kalıcı log tutulmaz.",
+      room_label: "Oda:",
+      btn_legal: "Yasal Uyarı",
+      btn_qr: "QR Kod",
+      btn_copy_link: "Linki Kopyala",
+      btn_destroy: "İmha Et",
+      tab_clips: "Pano & Fotoğraf Akışı",
+      tab_livepad: "Canlı Ortak Not Defteri",
+      live_sync_tag: "CANLI",
+      composer_placeholder: "Yazı, link veya kod yapıştırın ya da yazın... (Ctrl+Enter ile gönder, Ctrl+V ile resim yapıştır)",
+      btn_paste: "Panodan Yapıştır",
+      btn_upload: "Fotoğraf Ekle",
+      btn_send: "Gönder",
+      composer_security_tip: "Önemli: Şifre, kredi kartı veya hassas kişisel bilgi paylaşmayınız. <a href=\"#\" id=\"link-composer-legal\">Yasal Uyarı & Gizlilik</a>",
+      clips_section_title: "Paylaşılan Pano Öğeleri",
+      btn_clear_all: "Tümünü Temizle",
+      empty_clips_title: "Henüz bir öğe paylaşılmadı",
+      empty_clips_desc: "Yukarıdaki alana bir metin yazın, \"Panodan Yapıştır\" butonuna basın veya resim ekleyin. Diğer cihazlarınız anında görecek.",
+      livepad_title: "Ortak Anlık Not Defteri",
+      livepad_desc: "Buraya yazılan her harf bağlı tüm cihazlarda canlı güncellenir. Gönder butonuna gerek yoktur.",
+      livepad_copy: "Tümünü Kopyala",
+      livepad_clear: "Temizle",
+      livepad_legend: "Yazar İmzaları:",
+      livepad_placeholder: "İki cihaz arasında canlı olarak paylaşmak istediğiniz metni buraya yazın veya yapıştırın...",
+      modal_qr_title: "Cihaz Bağla & QR Kod",
+      modal_qr_desc: "Diğer cihazınızın kamerasıyla bu QR kodu okutarak anında odaya girin:",
+      lightbox_default_title: "Görsel",
+      modal_destroy_title: "Oturumu Şimdi İmha Et?",
+      modal_destroy_desc: "Bu işlem oturumdaki tüm metin ve görselleri <strong>sunucu belleğinden kalıcı olarak yok edecektir</strong>. Tüm cihazların bağlantısı kesilir.",
+      btn_cancel: "Vazgeç",
+      btn_confirm_destroy: "Evet, Tamamen İmha Et",
+      destroyed_title: "Oturum Güvenle İmha Edildi",
+      destroyed_reason_default: "Süre doldu veya imha edildi. Sunucu belleğindeki tüm veriler sıfırlandı.",
+      btn_restart_app: "Yeni Bir Oturum Aç",
+      modal_rename_title: "Cihaz Adınızı Belirleyin",
+      modal_rename_desc: "Mesajlarınızın ve canlı notlarınızın karışmaması için bu cihaza bir isim verin (örn: MacBook, Ofis PC, iPhone):",
+      modal_rename_placeholder: "Örn: MacBook, Ofis PC, iPhone...",
+      btn_save: "Kaydet",
+      legal_title: "Yasal Uyarı, Gizlilik & Sorumluluk Reddi",
+      legal_accept_btn: "Şartları & Sorumluluk Reddini Okudum, Anladım",
+      device_count_single: "1 Cihaz Bağlı",
+      device_count_multi: "{n} Cihaz Bağlı",
+      btn_copy_clip: "Kopyala",
+      btn_copied: "Kopyalandı!",
+      btn_download_img: "İndir",
+      btn_delete_clip: "Sil",
+      btn_open_url: "Yeni Sekmede Aç",
+      hour_short: "s",
+      min_short: "dk",
+      toast_copied: "Panoya kopyalandı!",
+      toast_copy_fail: "Kopyalama başarısız oldu.",
+      toast_room_destroyed: "Oda başarıyla imha edildi.",
+      toast_renamed: "Cihaz adı kaydedildi: ",
+      toast_opt_image: "Görsel optimize ediliyor...",
+      toast_clip_pasted: "Panodaki metin yapıştırıldı!",
+      toast_clip_empty: "Pano boş.",
+      toast_img_pasted: "Panodaki görsel eklendi!",
+      toast_perm_denied: "Lütfen panoya erişim izni verin.",
+      toast_connected: "Odaya bağlanıldı: ",
+      toast_burn_started: "🔥 İkinci cihaz bağlandı! 60 saniye içinde kendini imha edecek.",
+      toast_neon_on: "Yazar neon vurguları açıldı.",
+      toast_neon_off: "Yazar neon vurguları gizlendi.",
+      toast_download_started: "İndirme başlatıldı.",
+      toast_room_code_copied: "Oda kodu panoya kopyalandı!",
+      toast_link_copied: "Oda bağlantısı panoya kopyalandı!",
+      livepad_highlight_on: "Vurgu: Açık",
+      livepad_highlight_off: "Vurgu: Kapalı"
+    },
+    en: {
+      lang_name: "EN",
+      lang_flag: "🇬🇧",
+      switch_btn: "TR 🇹🇷",
+      switch_title: "Türkçe'ye Geç",
+      badge_tag: "Fast & Ephemeral Clipboard",
+      device_pill_title: "Click to rename this device",
+      default_device_name: "My Device",
+      landing_title_1: "Share Across Devices",
+      landing_title_2: "At Lightning Speed",
+      landing_title_3: "",
+      landing_subtitle: "No sign-up, no login. Instant sync for text, links, code, and photos between your computers and phones.",
+      create_card_title: "Start a New Sharing Room",
+      ttl_hint: "All data will be permanently wiped when the timer expires",
+      ttl_opt_burn: "Burn on Read",
+      ttl_opt_burn_desc: "60s after viewed",
+      ttl_opt_15m: "15 Minutes",
+      ttl_opt_15m_desc: "Quick transfer",
+      ttl_opt_1h: "1 Hour",
+      ttl_opt_1h_desc: "Recommended",
+      ttl_opt_8h: "8 Hours",
+      ttl_opt_8h_desc: "Workday session",
+      ttl_opt_24h: "1 Day",
+      ttl_opt_24h_desc: "Keep for 24 hours",
+      custom_room_label: "Custom Room Name (Optional):",
+      custom_room_placeholder: "1a23, 123a (leave empty for an auto 4-char code)",
+      btn_create_room: "Start Room & Generate QR",
+      divider_or: "OR JOIN AN EXISTING ROOM",
+      join_input_placeholder: "Room Code (e.g. 1a23, 123a) or full link...",
+      btn_join: "Join Room",
+      feat_1_title: "Zero Disk Trace",
+      feat_1_desc: "No data is written to server disk or database. Held strictly in temporary RAM and vaporized when expired.",
+      feat_2_title: "Short Link & QR Code",
+      feat_2_desc: "Scan the QR code with your phone camera or use a quick 4-character link to join the same room instantly.",
+      feat_3_title: "Real-Time Sync",
+      feat_3_desc: "Text, links, and photos added from one device appear on other connected screens in milliseconds.",
+      security_banner_text: "<strong>Important Legal Notice:</strong> Ulak is a temporary, ephemeral data transfer tool. End-to-end encryption is not guaranteed. Do not share passwords, credit cards, or confidential private data. Illegal content is strictly forbidden; all legal liability rests solely with the user.",
+      btn_legal_terms: "Legal Terms & Disclaimer",
+      footer_privacy: "Privacy Notice",
+      footer_terms: "Terms of Service",
+      footer_disclaimer: "Disclaimer",
+      footer_copy: "Ulak — Temporary in-memory cross-device clipboard service. Zero persistent server logging.",
+      room_label: "Room:",
+      btn_legal: "Legal Notice",
+      btn_qr: "QR Code",
+      btn_copy_link: "Copy Link",
+      btn_destroy: "Self-Destruct",
+      tab_clips: "Clipboard & Photo Stream",
+      tab_livepad: "Collaborative LivePad",
+      live_sync_tag: "LIVE",
+      composer_placeholder: "Type or paste text, links, or code... (Ctrl+Enter to send, Ctrl+V to paste image)",
+      btn_paste: "Paste Clipboard",
+      btn_upload: "Add Photo",
+      btn_send: "Send",
+      composer_security_tip: "Important: Never share passwords, credit cards, or sensitive data. <a href=\"#\" id=\"link-composer-legal\">Legal Notice & Privacy</a>",
+      clips_section_title: "Shared Clipboard Items",
+      btn_clear_all: "Clear All",
+      empty_clips_title: "No clips shared yet",
+      empty_clips_desc: "Type a message above, click \"Paste Clipboard\", or paste a screenshot. Connected devices will see it immediately.",
+      livepad_title: "Collaborative Realtime Notepad",
+      livepad_desc: "Every character typed here updates live across all connected devices. No submit button required.",
+      livepad_copy: "Copy All",
+      livepad_clear: "Clear",
+      livepad_legend: "Author Colors:",
+      livepad_placeholder: "Start typing notes to collaborate in real-time between your devices...",
+      modal_qr_title: "Connect Device & QR Code",
+      modal_qr_desc: "Scan this QR code with your phone camera to join this room instantly:",
+      lightbox_default_title: "Image",
+      modal_destroy_title: "Self-Destruct Room Now?",
+      modal_destroy_desc: "This action will <strong>permanently purge all text, notes, and photos from server memory</strong>. All connected devices will be disconnected.",
+      btn_cancel: "Cancel",
+      btn_confirm_destroy: "Yes, Wipe Completely",
+      destroyed_title: "Room Safely Self-Destructed",
+      destroyed_reason_default: "Session expired or destroyed. All data in server memory has been cleared.",
+      btn_restart_app: "Start a New Session",
+      modal_rename_title: "Name This Device",
+      modal_rename_desc: "Give this device a custom name so your messages and notes are clearly distinguishable (e.g. MacBook, Office PC, iPhone):",
+      modal_rename_placeholder: "e.g. MacBook, Office PC, iPhone...",
+      btn_save: "Save",
+      legal_title: "Legal Notice, Privacy & Disclaimer",
+      legal_accept_btn: "I Have Read & Agree to the Terms",
+      device_count_single: "1 Device Connected",
+      device_count_multi: "{n} Devices Connected",
+      btn_copy_clip: "Copy",
+      btn_copied: "Copied!",
+      btn_download_img: "Download",
+      btn_delete_clip: "Delete",
+      btn_open_url: "Open in New Tab",
+      hour_short: "h",
+      min_short: "m",
+      toast_copied: "Copied to clipboard!",
+      toast_copy_fail: "Copy failed.",
+      toast_room_destroyed: "Room has been destroyed.",
+      toast_renamed: "Device name saved: ",
+      toast_opt_image: "Optimizing image...",
+      toast_clip_pasted: "Pasted from clipboard!",
+      toast_clip_empty: "Clipboard is empty.",
+      toast_img_pasted: "Pasted image from clipboard!",
+      toast_perm_denied: "Please grant clipboard access permissions.",
+      toast_connected: "Connected to room: ",
+      toast_burn_started: "🔥 Second device joined! Room will self-destruct in 60 seconds.",
+      toast_neon_on: "Author neon highlights enabled.",
+      toast_neon_off: "Author neon highlights hidden.",
+      toast_download_started: "Download started.",
+      toast_room_code_copied: "Room code copied to clipboard!",
+      toast_link_copied: "Room link copied to clipboard!",
+      livepad_highlight_on: "Highlights: On",
+      livepad_highlight_off: "Highlights: Off"
+    }
+  };
+
+  const LEGAL_MODAL_HTML = {
+    tr: `
+      <div class="legal-section-callout" style="background: rgba(239, 68, 68, 0.1); border-left: 3px solid #ef4444; padding: 12px 14px; border-radius: 4px; margin-bottom: 16px; color: #fca5a5;">
+        <strong>⚠️ LÜTFEN DİKKATLE OKUYUNUZ:</strong> Bu servisi kullanarak aşağıdaki şartları ve yasal sorumluluk reddini peşinen, gayrikabili rücu kabul etmiş sayılırsınız.
+      </div>
+
+      <h4 style="color: var(--text-main); margin: 14px 0 6px; font-size: 1rem; display: flex; align-items: center; gap: 6px;">
+        <span>1.</span> Gizlilik Garantisi Verilmemektedir
+      </h4>
+      <p>
+        Ulak, cihazlarınız arasında (telefon, bilgisayar vb.) pratik ve anlık veri aktarımı sağlamak amacıyla tasarlanmış açık bir web aracıdır. Sistem verileri geçici olarak sunucu belleğinde (RAM) tutsa ve süre bitiminde sıfırlasa dahi, <strong>uçtan uca şifreleme veya mutlak gizlilik garantisi verilmemektedir</strong>.
+      </p>
+      <p>
+        Oda kodunu (örneğin <code>1a23</code>) veya doğrudan bağlantıyı bilen, tahmin eden, URL geçmişinden erişen ya da ortak ağları (halka açık Wi-Fi vb.) izleyen kötü niyetli üçüncü tarafların oturuma katılması teknik olarak mümkün olabilir.
+      </p>
+
+      <h4 style="color: var(--text-main); margin: 16px 0 6px; font-size: 1rem; display: flex; align-items: center; gap: 6px;">
+        <span>2.</span> Özel, Gizli ve Hassas Bilgi Paylaşımı Yasağı
+      </h4>
+      <p>
+        Kullanıcıların bu platform üzerinden <strong>şifreler, e-posta/hesap giriş bilgileri, kredi kartı ve banka detayları, T.C. kimlik numaraları, ticari sırlar, özel yazışmalar ve her türlü hassas kişisel veri (KVKK kapsamındaki nitelikli veriler dahil) paylaşması KESİNLİKLE YASAKTIR VE ÖNERİLMEZ</strong>.
+      </p>
+      <p style="color: #f87171;">
+        Bu tür hassas bilgilerin paylaşılması durumunda meydana gelebilecek herhangi bir yetkisiz erişim, sızıntı, kopyalanma, çalınma veya üçüncü şahısların eline geçmesi nedeniyle doğabilecek maddi, manevi, cezai veya hukuki hiçbir zarardan <strong>servis sağlayıcı, geliştirici ve site sahibi SORUMLU TUTULAMAZ</strong>. Tüm risk ve sorumluluk münhasıran kullanıcıya aittir.
+      </p>
+
+      <h4 style="color: var(--text-main); margin: 16px 0 6px; font-size: 1rem; display: flex; align-items: center; gap: 6px;">
+        <span>3.</span> Yasadışı İçerik Yasağı ve Hukuki Sorumluluk
+      </h4>
+      <p>
+        Bu servis; Türkiye Cumhuriyeti Kanunları ve uluslararası mevzuat uyarınca suç teşkil eden, telif hakkı ihlali barındıran, müstehcen/yasadışı materyal, tehdit, hakaret, nefret söylemi, kişisel verileri ihlal eden veya zararlı yazılım/virüs dağıtımı içeren hiçbir içeriğin aktarımı için kullanılamaz.
+      </p>
+      <p>
+        Sistem üzerinden paylaşılan her türlü metin, bağlantı ve dosyanın içeriğinden <strong>doğrudan ve yalnızca içeriği yükleyen/oluşturan kullanıcı sorumludur</strong>. Yetkili resmi makamlardan veya adli mercilerden talep gelmesi durumunda kanuni yükümlülükler eksiksiz yerine getirilir.
+      </p>
+
+      <h4 style="color: var(--text-main); margin: 16px 0 6px; font-size: 1rem; display: flex; align-items: center; gap: 6px;">
+        <span>4.</span> Hizmetin "Olduğu Gibi" (As-Is) Sunulması
+      </h4>
+      <p>
+        Servis herhangi bir kesintisizlik, veri kurtarma veya doğruluk garantisi olmaksızın "olduğu gibi" sunulmaktadır. Süresi dolan veya imha edilen veriler kalıcı olarak yok edilir; silinen içeriklerin geri getirilmesi teknik olarak imkansızdır. Olası veri kayıplarından sistem sorumlu değildir.
+      </p>
+    `,
+    en: `
+      <div class="legal-section-callout" style="background: rgba(239, 68, 68, 0.1); border-left: 3px solid #ef4444; padding: 12px 14px; border-radius: 4px; margin-bottom: 16px; color: #fca5a5;">
+        <strong>⚠️ PLEASE READ CAREFULLY:</strong> By using this service, you irrevocably acknowledge and agree to the following terms and legal disclaimers.
+      </div>
+
+      <h4 style="color: var(--text-main); margin: 14px 0 6px; font-size: 1rem; display: flex; align-items: center; gap: 6px;">
+        <span>1.</span> No Warranty of Confidentiality or Encryption
+      </h4>
+      <p>
+        Ulak is an open web tool engineered for quick, ephemeral transfer of text and media between your own devices. Although data resides temporarily in RAM and is wiped upon expiration, <strong>end-to-end encryption or absolute privacy is NOT guaranteed</strong>.
+      </p>
+      <p>
+        Any malicious third party who knows, guesses, or intercepts the room code (e.g. <code>1a23</code>), or monitors unencrypted public Wi-Fi networks, may technically join the session.
+      </p>
+
+      <h4 style="color: var(--text-main); margin: 16px 0 6px; font-size: 1rem; display: flex; align-items: center; gap: 6px;">
+        <span>2.</span> Strict Prohibition of Confidential & Sensitive Information
+      </h4>
+      <p>
+        Users are <strong>STRICTLY FORBIDDEN from sharing passwords, account credentials, credit card and banking details, government identification numbers, trade secrets, or sensitive personal data</strong> through this tool.
+      </p>
+      <p style="color: #f87171;">
+        The service provider, developer, and website host <strong>SHALL NOT BE HELD LIABLE</strong> for any unauthorized access, interception, leak, theft, financial loss, or damages resulting from the transfer of confidential data. All risks rest solely on the user.
+      </p>
+
+      <h4 style="color: var(--text-main); margin: 16px 0 6px; font-size: 1rem; display: flex; align-items: center; gap: 6px;">
+        <span>3.</span> Prohibition of Unlawful Content & User Liability
+      </h4>
+      <p>
+        This service must not be utilized to transmit content that violates local or international laws, infringes on copyrights, or contains obscene, defamatory, hateful, or malicious code/malware.
+      </p>
+      <p>
+        The user who posts, transmits, or generates content via this service <strong>bears sole and exclusive civil and criminal liability</strong>. Full cooperation with judicial and administrative authorities will be provided upon legal demand.
+      </p>
+
+      <h4 style="color: var(--text-main); margin: 16px 0 6px; font-size: 1rem; display: flex; align-items: center; gap: 6px;">
+        <span>4.</span> "As-Is" Service & No Data Recovery
+      </h4>
+      <p>
+        The service is provided strictly "as-is" without warranty of continuous availability, reliability, or recovery. Once expired or destroyed, all data is purged permanently from RAM with zero possibility of restoration.
+      </p>
+    `
+  };
+
+  function getInitialLanguage() {
+    try {
+      const saved = localStorage.getItem('ulak_lang');
+      if (saved === 'en' || saved === 'tr') return saved;
+    } catch (e) {}
+    const nav = (navigator.language || navigator.userLanguage || '').toLowerCase();
+    return nav.startsWith('tr') ? 'tr' : 'en';
+  }
+
+  let currentLang = getInitialLanguage();
+
+  function t(key, fallback) {
+    if (I18N[currentLang] && I18N[currentLang][key] !== undefined) {
+      return I18N[currentLang][key];
+    }
+    return fallback || key;
+  }
+
+  function applyLanguage(lang) {
+    currentLang = lang;
+    try { localStorage.setItem('ulak_lang', lang); } catch (e) {}
+    document.documentElement.lang = lang;
+
+    const dict = I18N[lang] || I18N.tr;
+
+    // 1. Text Content
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (dict[key] !== undefined) {
+        el.textContent = dict[key];
+      }
+    });
+
+    // 2. HTML Content
+    document.querySelectorAll('[data-i18n-html]').forEach(el => {
+      const key = el.getAttribute('data-i18n-html');
+      if (dict[key] !== undefined) {
+        el.innerHTML = dict[key];
+      }
+    });
+
+    // 3. Placeholders
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+      const key = el.getAttribute('data-i18n-placeholder');
+      if (dict[key] !== undefined) {
+        el.setAttribute('placeholder', dict[key]);
+      }
+    });
+
+    // 4. Titles / Tooltips
+    document.querySelectorAll('[data-i18n-title]').forEach(el => {
+      const key = el.getAttribute('data-i18n-title');
+      if (dict[key] !== undefined) {
+        el.setAttribute('title', dict[key]);
+      }
+    });
+
+    // 5. Update Toggle Buttons
+    const landingToggle = document.getElementById('landing-lang-toggle');
+    const roomToggle = document.getElementById('room-lang-toggle');
+    const targetLabel = lang === 'tr' ? 'EN' : 'TR';
+    const targetFlag = lang === 'tr' ? '🇬🇧' : '🇹🇷';
+    const switchTitle = lang === 'tr' ? 'Switch to English' : "Türkçe'ye Geç";
+
+    const landingText = document.getElementById('landing-lang-text');
+    const landingFlag = document.getElementById('landing-lang-flag');
+    if (landingText) landingText.textContent = targetLabel;
+    if (landingFlag) landingFlag.textContent = targetFlag;
+    if (landingToggle) landingToggle.title = switchTitle;
+
+    const roomText = document.getElementById('room-lang-text');
+    const roomFlag = document.getElementById('room-lang-flag');
+    if (roomText) roomText.textContent = targetLabel;
+    if (roomFlag) roomFlag.textContent = targetFlag;
+    if (roomToggle) roomToggle.title = switchTitle;
+
+    // 6. Update Legal Modal Body
+    const legalBody = document.getElementById('legal-modal-body');
+    if (legalBody && LEGAL_MODAL_HTML[lang]) {
+      legalBody.innerHTML = LEGAL_MODAL_HTML[lang];
+    }
+
+    // 7. Update Livepad stats
+    if (typeof updateLivepadStats === 'function') {
+      updateLivepadStats();
+    }
+    if (typeof neonToggleText !== 'undefined' && neonToggleText) {
+      neonToggleText.textContent = isNeonHighlighterActive ? dict.livepad_highlight_on : dict.livepad_highlight_off;
+    }
+  }
+
+  function toggleLanguage() {
+    const nextLang = currentLang === 'tr' ? 'en' : 'tr';
+    applyLanguage(nextLang);
+    showToast(nextLang === 'en' ? 'Language switched to English 🇬🇧' : 'Dil Türkçe olarak ayarlandı 🇹🇷');
+  }
+
+
   // State
   let currentRoomId = null;
   let currentTtlMode = '1h';
@@ -175,6 +584,12 @@
   const btnCancelDeviceRename = document.getElementById('btn-cancel-device-rename');
   const btnSaveDeviceRename = document.getElementById('btn-save-device-rename');
 
+  
+  const landingLangToggle = document.getElementById('landing-lang-toggle');
+  const roomLangToggle = document.getElementById('room-lang-toggle');
+  if (landingLangToggle) landingLangToggle.addEventListener('click', toggleLanguage);
+  if (roomLangToggle) roomLangToggle.addEventListener('click', toggleLanguage);
+    
   // Livepad Overlay & Neon Highlights Elements
   const livepadBackdrop = document.getElementById('livepad-backdrop');
   const livepadHighlights = document.getElementById('livepad-highlights');
@@ -513,9 +928,9 @@
         document.execCommand('copy');
         textArea.remove();
       }
-      showToast('Panoya kopyalandı!', 'success');
+      showToast(t('toast_copied', 'Panoya kopyalandı!'), 'success');
     } catch (err) {
-      showToast('Kopyalama başarısız oldu.', 'danger');
+      showToast(t('toast_copy_fail', 'Kopyalama başarısız oldu.'), 'danger');
     }
   }
 
@@ -856,7 +1271,7 @@
   }
 
   function updateDeviceCount(count) {
-    deviceCountText.textContent = count === 1 ? '1 Cihaz Bağlı' : `${count} Cihaz Bağlı`;
+    deviceCountText.textContent = count === 1 ? t('device_count_single', '1 Cihaz Bağlı') : t('device_count_multi', '{n} Cihaz Bağlı').replace('{n}', count);
   }
 
   function startTtlCountdown() {
@@ -864,7 +1279,7 @@
 
     function update() {
       if (currentTtlMode === 'burn_read' && !roomExpiresAt) {
-        ttlCountdownText.textContent = 'Okunduğunda İmha';
+        ttlCountdownText.textContent = t('ttl_opt_burn', 'Okunduğunda İmha');
         ttlTimerBadge.classList.remove('urgent');
         return;
       }
@@ -873,7 +1288,7 @@
 
       const diff = roomExpiresAt - Date.now();
       if (diff <= 0) {
-        ttlCountdownText.textContent = 'İmha Ediliyor...';
+        ttlCountdownText.textContent = t('ttl_calc', 'İmha Ediliyor...');
         ttlTimerBadge.classList.add('urgent');
         clearInterval(countdownTimerInterval);
         return;
@@ -945,7 +1360,7 @@
           <div>
             <a href="${firstUrl}" target="_blank" rel="noopener noreferrer" class="clip-link-preview">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-              <span>Yeni Sekmede Aç</span>
+              <span>${t('btn_open_url', 'Yeni Sekmede Aç')}</span>
             </a>
           </div>
         ` : ''}
@@ -958,7 +1373,7 @@
           <span class="clip-sender">
             <span class="sender-badge-inner">
               <span class="sender-dot" style="background:${senderColor.accent}; box-shadow: 0 0 6px ${senderColor.accent};"></span>
-              <span>${isMine ? `Sen (${escapeHtml(item.senderName || 'Bu Cihaz')})` : escapeHtml(item.senderName || 'Diğer Cihaz')}</span>
+              <span>${isMine ? (currentLang === 'en' ? `You (${escapeHtml(item.senderName || 'This Device')})` : `Sen (${escapeHtml(item.senderName || 'Bu Cihaz')})`) : escapeHtml(item.senderName || (currentLang === 'en' ? 'Other Device' : 'Diğer Cihaz'))}</span>
             </span>
           </span>
           <span>${formatTime(item.createdAt)}</span>
@@ -966,17 +1381,17 @@
         </div>
         <div class="clip-actions">
           ${!isImage ? `
-            <button class="btn btn-sm btn-outline btn-copy-clip" title="Metni Kopyala">
+            <button class="btn btn-sm btn-outline btn-copy-clip" title="${t('btn_copy_clip', 'Metni Kopyala')}">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-              <span>Kopyala</span>
+              <span>${t('btn_copy_clip', 'Kopyala')}</span>
             </button>
           ` : `
-            <button class="btn btn-sm btn-outline btn-download-clip" title="Fotoğrafı İndir">
+            <button class="btn btn-sm btn-outline btn-download-clip" title="${t('btn_download_img', 'Fotoğrafı İndir')}">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-              <span>İndir</span>
+              <span>${t('btn_download_img', 'İndir')}</span>
             </button>
           `}
-          <button class="btn btn-sm btn-ghost btn-delete-clip" title="Sil">
+          <button class="btn btn-sm btn-ghost btn-delete-clip" title="${t('btn_delete_clip', 'Sil')}">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
           </button>
         </div>
@@ -1595,6 +2010,7 @@
       localStorage.setItem('airclip_dev_name', myDeviceName);
     } catch (e) {}
 
+    applyLanguage(currentLang);
     updateDeviceHeaderBadge();
     closeDeviceRenameModal();
     showToast(`Cihaz adınız güncellendi: ${myDeviceName}`, 'success');

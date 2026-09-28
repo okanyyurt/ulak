@@ -1880,6 +1880,48 @@ input[type="text"]::placeholder, textarea::placeholder {
   border-color: var(--border-subtle);
   color: var(--text-main);
 }
+
+/* Language Toggle Button */
+.lang-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--border-subtle);
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-main);
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: all 0.15s ease;
+  font-family: inherit;
+}
+
+.lang-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
+  transform: translateY(-1px);
+}
+
+.lang-toggle-btn:active {
+  transform: scale(0.96);
+}
+
+.lang-toggle-btn .lang-flag {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.lang-toggle-btn .lang-text {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
 </style>
 </head>
 <body>
@@ -1897,82 +1939,88 @@ input[type="text"]::placeholder, textarea::placeholder {
           <div class="brand-badge" style="margin-bottom: 0;">
             <svg class="brand-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="brand-grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#06b6d4"/><stop offset="100%" stop-color="#6366f1"/></linearGradient><linearGradient id="arrow-grad-1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#38bdf8"/><stop offset="100%" stop-color="#06b6d4"/></linearGradient><linearGradient id="arrow-grad-2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#818cf8"/><stop offset="100%" stop-color="#a855f7"/></linearGradient></defs><rect width="64" height="64" rx="16" fill="#0f172a" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/><circle cx="32" cy="32" r="22" fill="url(#brand-grad)" opacity="0.15"/><path d="M18 32C18 24.27 24.27 18 32 18C38.2 18 43.47 22.05 45.24 27.7" stroke="url(#arrow-grad-1)" stroke-width="4.5" stroke-linecap="round"/><polyline points="39 28.5 45.5 28.5 47 22" stroke="url(#arrow-grad-1)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M46 32C46 39.73 39.73 46 32 46C25.8 46 20.53 41.95 18.76 36.3" stroke="url(#arrow-grad-2)" stroke-width="4.5" stroke-linecap="round"/><polyline points="25 35.5 18.5 35.5 17 42" stroke="url(#arrow-grad-2)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="32" cy="32" r="3.5" fill="#38bdf8"/></svg>
             <span class="brand-name">Ulak</span>
-            <span class="badge-tag">Hızlı & Geçici Pano</span>
+            <span class="badge-tag" data-i18n="badge_tag">Hızlı & Geçici Pano</span>
           </div>
-          <button type="button" class="device-pill" id="landing-device-name" title="Cihaz adınızı değiştirmek için tıklayın">
-            <span class="device-dot-indicator" id="landing-device-dot"></span>
-            <span class="device-pill-name" id="landing-device-name-text">Cihazım</span>
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-          </button>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <button type="button" class="lang-toggle-btn" id="landing-lang-toggle" title="Change Language / Dili Değiştir">
+              <span class="lang-flag" id="landing-lang-flag">🌐</span>
+              <span class="lang-text" id="landing-lang-text">EN</span>
+            </button>
+            <button type="button" class="device-pill" id="landing-device-name" title="Cihaz adınızı değiştirmek için tıklayın" data-i18n-title="device_pill_title">
+              <span class="device-dot-indicator" id="landing-device-dot"></span>
+              <span class="device-pill-name" id="landing-device-name-text">Cihazım</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+            </button>
+          </div>
         </div>
-        <h1 class="landing-title">Cihazlar Arasında <span class="gradient-text">Işık Hızında</span> Paylaşın</h1>
-        <p class="landing-subtitle">Üyelik yok, kayıt yok. Yazı, bağlantı ve fotoğrafları bilgisayarlarınız ve telefonunuz arasında anında eşitleyin.</p>
+        <h1 class="landing-title"><span data-i18n="landing_title_1">Cihazlar Arasında</span> <span class="gradient-text" data-i18n="landing_title_2">Işık Hızında</span> <span data-i18n="landing_title_3">Paylaşın</span></h1>
+        <p class="landing-subtitle" data-i18n="landing_subtitle">Üyelik yok, kayıt yok. Yazı, bağlantı ve fotoğrafları bilgisayarlarınız ve telefonunuz arasında anında eşitleyin.</p>
       </header>
 
       <section class="card creation-card">
         <h2 class="card-title">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
-          Yeni Paylaşım Oturumu Başlat
+          <span data-i18n="create_card_title">Yeni Paylaşım Oturumu Başlat</span>
         </h2>
 
         <!-- TTL (Self-destruct) Options -->
         <div class="form-group">
           <label class="form-label">
             <span>Kendini İmha Süresi:</span>
-            <span class="label-hint" id="ttl-hint">Süre bitiminde tüm veriler bellekten silinir</span>
+            <span class="label-hint" id="ttl-hint" data-i18n="ttl_hint">Süre bitiminde tüm veriler bellekten silinir</span>
           </label>
           <div class="ttl-selector" id="ttl-selector">
             <button type="button" class="ttl-option" data-ttl="burn_read">
               <span class="ttl-icon">🔥</span>
-              <span class="ttl-name">Okunur Okunmaz</span>
-              <span class="ttl-desc">Görüldükten 60sn sonra</span>
+              <span class="ttl-name" data-i18n="ttl_opt_burn">Okunur Okunmaz</span>
+              <span class="ttl-desc" data-i18n="ttl_opt_burn_desc">Görüldükten 60sn sonra</span>
             </button>
             <button type="button" class="ttl-option" data-ttl="15m">
               <span class="ttl-icon">⚡</span>
-              <span class="ttl-name">15 Dakika</span>
-              <span class="ttl-desc">Hızlı transfer</span>
+              <span class="ttl-name" data-i18n="ttl_opt_15m">15 Dakika</span>
+              <span class="ttl-desc" data-i18n="ttl_opt_15m_desc">Hızlı transfer</span>
             </button>
             <button type="button" class="ttl-option active" data-ttl="1h">
               <span class="ttl-icon">⏱️</span>
-              <span class="ttl-name">1 Saat</span>
-              <span class="ttl-desc">Önerilen</span>
+              <span class="ttl-name" data-i18n="ttl_opt_1h">1 Saat</span>
+              <span class="ttl-desc" data-i18n="ttl_opt_1h_desc">Önerilen</span>
             </button>
             <button type="button" class="ttl-option" data-ttl="8h">
               <span class="ttl-icon">⏳</span>
-              <span class="ttl-name">8 Saat</span>
-              <span class="ttl-desc">Mesai süresince</span>
+              <span class="ttl-name" data-i18n="ttl_opt_8h">8 Saat</span>
+              <span class="ttl-desc" data-i18n="ttl_opt_8h_desc">Mesai süresince</span>
             </button>
             <button type="button" class="ttl-option" data-ttl="24h">
               <span class="ttl-icon">📅</span>
-              <span class="ttl-name">1 Gün</span>
-              <span class="ttl-desc">24 saat sakla</span>
+              <span class="ttl-name" data-i18n="ttl_opt_24h">1 Gün</span>
+              <span class="ttl-desc" data-i18n="ttl_opt_24h_desc">24 saat sakla</span>
             </button>
           </div>
         </div>
 
         <!-- Short Room Name (Optional) -->
         <div class="form-group custom-room-group">
-          <label for="custom-room-input" class="form-label">Özel Oda Adı (İsteğe Bağlı):</label>
+          <label for="custom-room-input" class="form-label" data-i18n="custom_room_label">Özel Oda Adı (İsteğe Bağlı):</label>
           <div class="input-with-icon">
             <span class="input-prefix" id="room-prefix-label">.../</span>
-            <input type="text" id="custom-room-input" placeholder="1a23, 123a (boş bırakırsanız 4 haneli kod verilir)" maxlength="32" autocomplete="off">
+            <input type="text" id="custom-room-input" placeholder="1a23, 123a (boş bırakırsanız 4 haneli kod verilir)" data-i18n-placeholder="custom_room_placeholder" maxlength="32" autocomplete="off">
           </div>
         </div>
 
         <button id="btn-create-room" class="btn btn-primary btn-large btn-glow">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-          Hemen Oturumu Başlat
+          <span data-i18n="btn_create_room">Hemen Oturumu Başlat</span>
         </button>
 
         <div class="divider">
-          <span>VEYA VAR OLAN BİR ODAYA GİRİN</span>
+          <span data-i18n="divider_or">VEYA VAR OLAN BİR ODAYA GİRİN</span>
         </div>
 
         <form id="form-join-room" class="join-form">
-          <input type="text" id="join-room-input" placeholder="Oda Kodu (örn: 1a23, 123a) veya tam link..." autocomplete="off">
+          <input type="text" id="join-room-input" placeholder="Oda Kodu (örn: 1a23, 123a) veya tam link..." data-i18n-placeholder="join_input_placeholder" autocomplete="off">
           <button type="submit" class="btn btn-secondary">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
-            Katıl
+            <span data-i18n="btn_join">Katıl</span>
           </button>
         </form>
       </section>
@@ -1981,18 +2029,18 @@ input[type="text"]::placeholder, textarea::placeholder {
       <section class="features-grid">
         <div class="feature-item">
           <div class="feature-icon">🛡️</div>
-          <h3>Sıfır Disk İzi</h3>
-          <p>Hiçbir veri sunucu diskine yazılmaz. Yalnızca geçici RAM'de tutulur, süre dolunca buharlaşır.</p>
+          <h3 data-i18n="feat_1_title">Sıfır Disk İzi</h3>
+          <p data-i18n="feat_1_desc">Hiçbir veri sunucu diskine yazılmaz. Yalnızca geçici RAM'de tutulur, süre dolunca buharlaşır.</p>
         </div>
         <div class="feature-item">
           <div class="feature-icon">📱</div>
-          <h3>Kısa Link & QR Kod</h3>
-          <p>Kamerayı QR koda tutun veya <code>/chat/a123</code> gibi kısa linkle anında aynı odaya bağlanın.</p>
+          <h3 data-i18n="feat_2_title">Kısa Link & QR Kod</h3>
+          <p data-i18n-html="feat_2_desc">Kamerayı QR koda tutun veya <code>/chat/a123</code> gibi kısa linkle anında aynı odaya bağlanın.</p>
         </div>
         <div class="feature-item">
           <div class="feature-icon">⚡</div>
-          <h3>Gerçek Zamanlı Eşzamanlama</h3>
-          <p>Bir cihazdan eklenen metin, link veya fotoğraf diğer cihazlara anında yansır.</p>
+          <h3 data-i18n="feat_3_title">Gerçek Zamanlı Eşzamanlama</h3>
+          <p data-i18n="feat_3_desc">Bir cihazdan eklenen metin, link veya fotoğraf diğer cihazlara anında yansır.</p>
         </div>
       </section>
 
@@ -2000,10 +2048,10 @@ input[type="text"]::placeholder, textarea::placeholder {
       <section class="security-banner">
         <div class="security-banner-content">
           <div class="security-badge-icon">⚖️</div>
-          <div class="security-banner-text">
+          <div class="security-banner-text" data-i18n-html="security_banner_text">
             <strong>Önemli Yasal Bildirim:</strong> Ulak geçici ve deneysel bir anlık aktarım aracıdır. Uçtan uca mutlak gizlilik garanti edilmez. Şifre, kredi kartı veya özel/gizli bilgilerinizi kesinlikle paylaşmayınız. İllegal içerik paylaşımı kesinlikle yasaktır; tüm hukuki ve cezai sorumluluk kullanıcıya aittir.
           </div>
-          <button type="button" id="btn-open-legal" class="btn btn-sm btn-outline">
+          <button type="button" id="btn-open-legal" class="btn btn-sm btn-outline" data-i18n="btn_legal_terms">
             Yasal Şartlar & Sorumluluk Reddi
           </button>
         </div>
@@ -2012,13 +2060,13 @@ input[type="text"]::placeholder, textarea::placeholder {
       <!-- Landing Footer -->
       <footer class="landing-footer">
         <div class="footer-links">
-          <a href="#" id="link-legal-privacy" class="footer-link">Gizlilik Bildirimi</a>
+          <a href="#" id="link-legal-privacy" class="footer-link" data-i18n="footer_privacy">Gizlilik Bildirimi</a>
           <span class="footer-dot">•</span>
-          <a href="#" id="link-legal-terms" class="footer-link">Kullanım Şartları</a>
+          <a href="#" id="link-legal-terms" class="footer-link" data-i18n="footer_terms">Kullanım Şartları</a>
           <span class="footer-dot">•</span>
-          <a href="#" id="link-legal-disclaimer" class="footer-link">Sorumluluk Reddi</a>
+          <a href="#" id="link-legal-disclaimer" class="footer-link" data-i18n="footer_disclaimer">Sorumluluk Reddi</a>
         </div>
-        <div class="footer-copy">
+        <div class="footer-copy" data-i18n="footer_copy">
           Ulak — RAM üzerinde çalışan geçici ve anlık veri aktarım servisi. Sunucuda kalıcı log tutulmaz.
         </div>
       </footer>
@@ -2036,7 +2084,7 @@ input[type="text"]::placeholder, textarea::placeholder {
             <span class="room-brand-text">Ulak</span>
           </a>
           <div class="room-id-pill" id="room-id-badge" title="Oda Adını Kopyala">
-            <span class="room-id-label">Oda:</span>
+            <span class="room-id-label" data-i18n="room_label">Oda:</span>
             <span class="room-id-value" id="current-room-name">...</span>
             <svg class="copy-icon-inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
           </div>
@@ -2059,21 +2107,25 @@ input[type="text"]::placeholder, textarea::placeholder {
         </div>
 
         <div class="room-header-right">
+          <button type="button" class="lang-toggle-btn" id="room-lang-toggle" title="Change Language / Dili Değiştir">
+            <span class="lang-flag" id="room-lang-flag">🌐</span>
+            <span class="lang-text" id="room-lang-text">EN</span>
+          </button>
           <button id="btn-room-legal" class="btn btn-sm btn-ghost" title="Yasal Uyarı, Gizlilik & Şartlar">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-            <span class="hide-mobile">Yasal Uyarı</span>
+            <span class="hide-mobile" data-i18n="btn_legal">Yasal Uyarı</span>
           </button>
           <button id="btn-show-qr" class="btn btn-sm btn-outline" title="Cihaz Ekle / QR Kod">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-            <span class="hide-mobile">QR Kod</span>
+            <span class="hide-mobile" data-i18n="btn_qr">QR Kod</span>
           </button>
           <button id="btn-copy-link" class="btn btn-sm btn-outline" title="Bağlantıyı Kopyala">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-            <span class="hide-mobile">Linki Kopyala</span>
+            <span class="hide-mobile" data-i18n="btn_copy_link">Linki Kopyala</span>
           </button>
           <button id="btn-prompt-destroy" class="btn btn-sm btn-danger" title="Odayı Şimdi İmha Et">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>
-            <span class="hide-mobile">İmha Et</span>
+            <span class="hide-mobile" data-i18n="btn_destroy">İmha Et</span>
           </button>
         </div>
       </header>
@@ -2082,13 +2134,13 @@ input[type="text"]::placeholder, textarea::placeholder {
       <nav class="room-tabs">
         <button class="room-tab-btn active" id="tab-clips-btn" data-tab="clips">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-          <span>Pano & Fotoğraf Akışı</span>
+          <span data-i18n="tab_clips">Pano & Fotoğraf Akışı</span>
           <span class="tab-badge" id="clips-counter">0</span>
         </button>
         <button class="room-tab-btn" id="tab-livepad-btn" data-tab="livepad">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-          <span>Canlı Ortak Not Defteri</span>
-          <span class="live-sync-indicator" title="Her iki tarafta da anlık yazılır">CANLI</span>
+          <span data-i18n="tab_livepad">Canlı Ortak Not Defteri</span>
+          <span class="live-sync-indicator" data-i18n="live_sync_tag" title="Her iki tarafta da anlık yazılır">CANLI</span>
         </button>
       </nav>
 
@@ -2097,7 +2149,7 @@ input[type="text"]::placeholder, textarea::placeholder {
         <!-- New Item Composer Card -->
         <section class="card composer-card">
           <div class="composer-body">
-            <textarea id="composer-text" placeholder="Yazı, link veya kod yapıştırın ya da yazın... (Ctrl+Enter ile gönder, Ctrl+V ile resim yapıştır)" rows="3"></textarea>
+            <textarea id="composer-text" placeholder="Yazı, link veya kod yapıştırın ya da yazın... (Ctrl+Enter ile gönder, Ctrl+V ile resim yapıştır)" data-i18n-placeholder="composer_placeholder" rows="3"></textarea>
 
             <!-- Image preview banner if an image is selected -->
             <div id="composer-img-preview" class="image-preview-box hidden">
@@ -2118,12 +2170,12 @@ input[type="text"]::placeholder, textarea::placeholder {
             <div class="toolbar-left">
               <button type="button" id="btn-quick-paste" class="btn btn-sm btn-ghost" title="Cihazınızın panosundaki metni veya resmi tek tıkla buraya yapıştırır">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
-                <span>Panodan Yapıştır</span>
+                <span data-i18n="btn_paste">Panodan Yapıştır</span>
               </button>
 
               <label for="image-upload-input" class="btn btn-sm btn-ghost file-input-label" title="Fotoğraf veya Resim Ekle">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
-                <span>Fotoğraf Ekle</span>
+                <span data-i18n="btn_upload">Fotoğraf Ekle</span>
                 <input type="file" id="image-upload-input" accept="image/*" class="sr-only">
               </label>
             </div>
@@ -2131,7 +2183,7 @@ input[type="text"]::placeholder, textarea::placeholder {
             <div class="toolbar-right">
               <button id="btn-send-clip" class="btn btn-primary btn-sm">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-                <span>Gönder</span>
+                <span data-i18n="btn_send">Gönder</span>
               </button>
             </div>
           </div>
@@ -2139,21 +2191,21 @@ input[type="text"]::placeholder, textarea::placeholder {
 
         <div class="composer-security-tip">
           <span>🛡️</span>
-          <span>Önemli: Şifre, kredi kartı veya hassas kişisel bilgi paylaşmayınız. <a href="#" id="link-composer-legal">Yasal Uyarı & Gizlilik</a></span>
+          <span data-i18n-html="composer_security_tip">Önemli: Şifre, kredi kartı veya hassas kişisel bilgi paylaşmayınız. <a href="#" id="link-composer-legal">Yasal Uyarı & Gizlilik</a></span>
         </div>
 
         <!-- Clips Feed List -->
         <section class="clips-stream-wrapper">
           <div class="clips-stream-header">
-            <h3 class="section-subtitle">Paylaşılan Pano Öğeleri</h3>
-            <button id="btn-clear-all" class="btn-link" title="Tüm panoyu temizle">Tümünü Temizle</button>
+            <h3 class="section-subtitle" data-i18n="clips_section_title">Paylaşılan Pano Öğeleri</h3>
+            <button id="btn-clear-all" class="btn-link" data-i18n="btn_clear_all" title="Tüm panoyu temizle">Tümünü Temizle</button>
           </div>
 
           <div id="clips-container" class="clips-container">
             <div id="empty-clips-placeholder" class="empty-state">
               <div class="empty-state-icon">📋</div>
-              <h4>Henüz bir öğe paylaşılmadı</h4>
-              <p>Yukarıdaki alana bir metin yazın, "Panodan Yapıştır" butonuna basın veya resim ekleyin. Diğer cihazlarınız anında görecek.</p>
+              <h4 data-i18n="empty_clips_title">Henüz bir öğe paylaşılmadı</h4>
+              <p data-i18n="empty_clips_desc">Yukarıdaki alana bir metin yazın, "Panodan Yapıştır" butonuna basın veya resim ekleyin. Diğer cihazlarınız anında görecek.</p>
             </div>
           </div>
         </section>
@@ -2164,8 +2216,8 @@ input[type="text"]::placeholder, textarea::placeholder {
         <section class="card livepad-card">
           <div class="livepad-header">
             <div class="livepad-info">
-              <h3>Ortak Anlık Not Defteri</h3>
-              <p class="text-muted">Buraya yazılan her harf bağlı tüm cihazlarda canlı güncellenir. Gönder butonuna gerek yoktur.</p>
+              <h3 data-i18n="livepad_title">Ortak Anlık Not Defteri</h3>
+              <p class="text-muted" data-i18n="livepad_desc">Buraya yazılan her harf bağlı tüm cihazlarda canlı güncellenir. Gönder butonuna gerek yoktur.</p>
             </div>
             <div class="livepad-actions">
               <button id="btn-livepad-paste" class="btn btn-sm btn-outline">
@@ -2174,14 +2226,14 @@ input[type="text"]::placeholder, textarea::placeholder {
               </button>
               <button id="btn-livepad-copy" class="btn btn-sm btn-primary">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                <span>Tümünü Kopyala</span>
+                <span data-i18n="livepad_copy">Tümünü Kopyala</span>
               </button>
-              <button id="btn-livepad-clear" class="btn btn-sm btn-ghost text-danger">Temizle</button>
+              <button id="btn-livepad-clear" class="btn btn-sm btn-ghost text-danger" data-i18n="livepad_clear">Temizle</button>
             </div>
           </div>
           <!-- Author Colors Legend Bar -->
           <div class="livepad-legend-bar" id="livepad-legend-bar">
-            <span class="legend-title">Yazar İmzaları:</span>
+            <span class="legend-title" data-i18n="livepad_legend">Yazar İmzaları:</span>
             <div id="livepad-authors-chips" class="livepad-authors-chips"></div>
             <div style="margin-left: auto;">
               <button type="button" class="btn btn-sm btn-ghost" id="btn-toggle-neon-highlighter" title="Neon yazar vurgusunu aç/kapat" style="font-size: 0.76rem; padding: 2px 8px;">
@@ -2194,7 +2246,7 @@ input[type="text"]::placeholder, textarea::placeholder {
             <div class="livepad-backdrop" id="livepad-backdrop" aria-hidden="true">
               <div class="livepad-highlights" id="livepad-highlights"></div>
             </div>
-            <textarea id="livepad-textarea" class="livepad-textarea" placeholder="İki cihaz arasında canlı olarak paylaşmak istediğiniz metni buraya yazın veya yapıştırın..." spellcheck="false"></textarea>
+            <textarea id="livepad-textarea" class="livepad-textarea" placeholder="İki cihaz arasında canlı olarak paylaşmak istediğiniz metni buraya yazın veya yapıştırın..." data-i18n-placeholder="livepad_placeholder" spellcheck="false"></textarea>
           </div>
           <div class="livepad-footer">
             <span id="livepad-char-count">0 karakter | 0 kelime</span>
@@ -2212,12 +2264,12 @@ input[type="text"]::placeholder, textarea::placeholder {
         <div class="modal-header">
           <h3 class="modal-title">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-            Cihaz Bağla & QR Kod
+            <span data-i18n="modal_qr_title">Cihaz Bağla & QR Kod</span>
           </h3>
           <button type="button" class="btn-close-modal" id="btn-close-qr-modal">&times;</button>
         </div>
         <div class="modal-body text-center">
-          <p class="modal-desc">Diğer cihazınızın kamerasıyla bu QR kodu okutarak anında odaya girin:</p>
+          <p class="modal-desc" data-i18n="modal_qr_desc">Diğer cihazınızın kamerasıyla bu QR kodu okutarak anında odaya girin:</p>
           
           <div class="qr-image-container" id="qr-canvas-holder"></div>
 
@@ -2249,7 +2301,7 @@ input[type="text"]::placeholder, textarea::placeholder {
     <div id="lightbox-modal" class="modal-backdrop hidden">
       <div class="lightbox-dialog">
         <div class="lightbox-header">
-          <span id="lightbox-filename" class="lightbox-filename">Görsel</span>
+          <span id="lightbox-filename" class="lightbox-filename" data-i18n="lightbox_default_title">Görsel</span>
           <div class="lightbox-actions">
             <button id="btn-lightbox-download" class="btn btn-sm btn-secondary" title="İndir">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
@@ -2270,11 +2322,11 @@ input[type="text"]::placeholder, textarea::placeholder {
     <div id="destroy-confirm-modal" class="modal-backdrop hidden">
       <div class="modal-dialog modal-dialog-sm text-center">
         <div class="destroy-alert-icon">💣</div>
-        <h3 class="modal-title">Oturumu Şimdi İmha Et?</h3>
-        <p class="modal-desc">Bu işlem oturumdaki tüm metin ve görselleri <strong>sunucu belleğinden kalıcı olarak yok edecektir</strong>. Tüm cihazların bağlantısı kesilir.</p>
+        <h3 class="modal-title" data-i18n="modal_destroy_title">Oturumu Şimdi İmha Et?</h3>
+        <p class="modal-desc" data-i18n-html="modal_destroy_desc">Bu işlem oturumdaki tüm metin ve görselleri <strong>sunucu belleğinden kalıcı olarak yok edecektir</strong>. Tüm cihazların bağlantısı kesilir.</p>
         <div class="modal-buttons">
-          <button type="button" id="btn-cancel-destroy" class="btn btn-secondary">Vazgeç</button>
-          <button type="button" id="btn-confirm-destroy" class="btn btn-danger">Evet, Tamamen İmha Et</button>
+          <button type="button" id="btn-cancel-destroy" class="btn btn-secondary" data-i18n="btn_cancel">Vazgeç</button>
+          <button type="button" id="btn-confirm-destroy" class="btn btn-danger" data-i18n="btn_confirm_destroy">Evet, Tamamen İmha Et</button>
         </div>
       </div>
     </div>
@@ -2285,11 +2337,11 @@ input[type="text"]::placeholder, textarea::placeholder {
     <div id="destroyed-screen" class="destroyed-overlay hidden">
       <div class="destroyed-card text-center">
         <div class="destroyed-icon">🔥</div>
-        <h2>Oturum Güvenle İmha Edildi</h2>
-        <p id="destroyed-reason-text">Süre doldu veya imha edildi. Sunucu belleğindeki tüm veriler sıfırlandı.</p>
+        <h2 data-i18n="destroyed_title">Oturum Güvenle İmha Edildi</h2>
+        <p id="destroyed-reason-text" data-i18n="destroyed_reason_default">Süre doldu veya imha edildi. Sunucu belleğindeki tüm veriler sıfırlandı.</p>
         <button id="btn-restart-app" class="btn btn-primary btn-large">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
-          Yeni Bir Oturum Aç
+          <span data-i18n="btn_restart_app">Yeni Bir Oturum Aç</span>
         </button>
       </div>
     </div>
@@ -2300,21 +2352,21 @@ input[type="text"]::placeholder, textarea::placeholder {
         <div class="modal-header">
           <h3 class="modal-title" style="display: flex; align-items: center; gap: 8px;">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-            Cihaz Adınızı Belirleyin
+            <span data-i18n="modal_rename_title">Cihaz Adınızı Belirleyin</span>
           </h3>
           <button type="button" class="btn-close-modal modal-close-btn" id="btn-close-device-modal" title="Kapat">&times;</button>
         </div>
         <div class="modal-body">
           <p class="modal-desc" style="margin-bottom: 12px; font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
-            Mesajlarınızın ve canlı notlarınızın karışmaması için bu cihaza bir isim verin (örn: MacBook, Ofis PC, iPhone):
+            <span data-i18n="modal_rename_desc">Mesajlarınızın ve canlı notlarınızın karışmaması için bu cihaza bir isim verin (örn: MacBook, Ofis PC, iPhone):</span>
           </p>
           <div class="form-group">
-            <input type="text" id="device-rename-input" placeholder="Örn: MacBook, Ofis PC, iPhone..." maxlength="24" autocomplete="off" style="width: 100%; padding: 10px 14px; background: rgba(0,0,0,0.3); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); color: var(--text-main); font-size: 0.95rem;">
+            <input type="text" id="device-rename-input" placeholder="Örn: MacBook, Ofis PC, iPhone..." data-i18n-placeholder="modal_rename_placeholder" maxlength="24" autocomplete="off" style="width: 100%; padding: 10px 14px; background: rgba(0,0,0,0.3); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); color: var(--text-main); font-size: 0.95rem;">
           </div>
         </div>
         <div class="modal-buttons" style="display: flex; gap: 10px; margin-top: 18px;">
-          <button type="button" class="btn btn-secondary" id="btn-cancel-device-rename" style="flex: 1;">Vazgeç</button>
-          <button type="button" class="btn btn-primary" id="btn-save-device-rename" style="flex: 1;">Kaydet</button>
+          <button type="button" class="btn btn-secondary" id="btn-cancel-device-rename" style="flex: 1;" data-i18n="btn_cancel">Vazgeç</button>
+          <button type="button" class="btn btn-primary" id="btn-save-device-rename" style="flex: 1;" data-i18n="btn_save">Kaydet</button>
         </div>
       </div>
     </div>
@@ -2332,11 +2384,11 @@ input[type="text"]::placeholder, textarea::placeholder {
         <div class="modal-header">
           <h3 class="modal-title" style="display: flex; align-items: center; gap: 8px;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-            Yasal Uyarı, Gizlilik & Sorumluluk Reddi
+            <span data-i18n="legal_title">Yasal Uyarı, Gizlilik & Sorumluluk Reddi</span>
           </h3>
           <button type="button" class="btn-close-modal modal-close-btn" id="btn-close-legal-modal">&times;</button>
         </div>
-        <div class="modal-body legal-modal-body" style="max-height: 65vh; overflow-y: auto; padding-right: 8px; font-size: 0.9rem; line-height: 1.6; color: var(--text-muted);">
+        <div class="modal-body legal-modal-body" id="legal-modal-body" style="max-height: 65vh; overflow-y: auto; padding-right: 8px; font-size: 0.9rem; line-height: 1.6; color: var(--text-muted);">
           
           <div class="legal-section-callout" style="background: rgba(239, 68, 68, 0.1); border-left: 3px solid #ef4444; padding: 12px 14px; border-radius: 4px; margin-bottom: 16px; color: #fca5a5;">
             <strong>⚠️ LÜTFEN DİKKATLE OKUYUNUZ:</strong> Bu servisi kullanarak aşağıdaki şartları ve yasal sorumluluk reddini peşinen, gayrikabili rücu kabul etmiş sayılırsınız.
@@ -2381,7 +2433,7 @@ input[type="text"]::placeholder, textarea::placeholder {
         </div>
         <div class="modal-buttons" style="margin-top: 16px;">
           <button type="button" class="btn btn-primary" id="btn-accept-legal" style="width: 100%;">
-            Şartları & Sorumluluk Reddini Okudum, Anladım
+            <span data-i18n="legal_accept_btn">Şartları & Sorumluluk Reddini Okudum, Anladım</span>
           </button>
         </div>
       </div>
