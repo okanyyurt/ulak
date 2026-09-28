@@ -1,0 +1,37 @@
+{
+  "name": "ulak",
+  "version": "1.0.0",
+  "description": "Cihazlar arası ışık hızında geçici pano, canlı not defteri ve veri aktarım sistemi",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": [
+    "ulak",
+    "clipboard",
+    "temporary-chat",
+    "cross-device",
+    "realtime",
+    "webrtc",
+    "livepad",
+    "socketio",
+    "self-hosted"
+  ],
+  "author": "Okan Yeşilyurt",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/okanyyurt/ulak.git"
+  },
+  "type": "commonjs",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "qrcode": "^1.5.4",
+    "socket.io": "^4.8.4"
+  },
+  "devDependencies": {
+    "socket.io-client": "^4.8.4"
+  }
+}

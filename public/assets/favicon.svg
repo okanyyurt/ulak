@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="brand-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="100%" stop-color="#6366f1"/>
+    </linearGradient>
+    <linearGradient id="arrow-grad-1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+    <linearGradient id="arrow-grad-2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#818cf8"/>
+      <stop offset="100%" stop-color="#a855f7"/>
+    </linearGradient>
+  </defs>
+  <!-- Background Rounded Shield -->
+  <rect width="64" height="64" rx="16" fill="#0f172a" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+  <circle cx="32" cy="32" r="22" fill="url(#brand-grad)" opacity="0.15"/>
+  <!-- Top Arc Synchronization Arrow (Clockwise) -->
+  <path d="M18 32C18 24.27 24.27 18 32 18C38.2 18 43.47 22.05 45.24 27.7" stroke="url(#arrow-grad-1)" stroke-width="4.5" stroke-linecap="round"/>
+  <polyline points="39 28.5 45.5 28.5 47 22" stroke="url(#arrow-grad-1)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Bottom Arc Synchronization Arrow (Counter-Clockwise) -->
+  <path d="M46 32C46 39.73 39.73 46 32 46C25.8 46 20.53 41.95 18.76 36.3" stroke="url(#arrow-grad-2)" stroke-width="4.5" stroke-linecap="round"/>
+  <polyline points="25 35.5 18.5 35.5 17 42" stroke="url(#arrow-grad-2)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Central Glowing Sync Node -->
+  <circle cx="32" cy="32" r="3.5" fill="#38bdf8"/>
+</svg>

@@ -1,0 +1,26 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Prevent direct web access to internal session data
+    RewriteRule ^data/ - [F,L]
+
+    # If room link has a trailing slash (e.g. /c/1a23/ or /c/123a/), redirect to clean room URL
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^([a-zA-Z0-9\-_]+)/$ $1 [R=301,L]
+
+    # Allow access to actual existing files (css, js, images, api.php)
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Route all short room URLs (e.g. /c/1a23, /c/123a, /c/a123)
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php [L,QSA]
+</IfModule>
+
+# Prefer index.php, fallback to index.html
+DirectoryIndex index.php index.html
+
+# Disable directory browsing
+Options -Indexes

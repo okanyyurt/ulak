@@ -1,0 +1,20 @@
+# Bağımlılıklar
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Ortam ve Geçici Dosyalar
+.env
+.env.local
+.system_generated/
+.tempmediaStorage/
+scratch*.js
+*.log
+
+# İşletim Sistemi ve Editör Dosyaları
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
