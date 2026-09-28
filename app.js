@@ -2082,7 +2082,7 @@
     }
 
     // 4. Legal notice modal open triggers
-    if (e.target.closest('#btn-open-legal, #link-legal-privacy, #link-legal-terms, #link-legal-disclaimer, #btn-room-legal, #link-composer-legal')) {
+    if (e.target.closest('#btn-open-legal, #link-legal-privacy, #link-legal-terms, #link-legal-disclaimer, #link-room-legal-privacy, #link-room-legal-terms, #link-room-legal-disclaimer, .link-room-legal, #btn-room-legal, #link-composer-legal')) {
       e.preventDefault();
       openLegalNoticeModal();
       return;

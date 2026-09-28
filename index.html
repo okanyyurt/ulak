@@ -541,6 +541,7 @@ input[type="text"]::placeholder, textarea::placeholder {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  flex-wrap: wrap;
   background: var(--bg-card);
   backdrop-filter: blur(20px);
   border: 1px solid var(--border-subtle);
@@ -650,6 +651,7 @@ input[type="text"]::placeholder, textarea::placeholder {
   display: flex;
   align-items: center;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
 /* Tabs Navigation */
@@ -2101,10 +2103,6 @@ input[type="text"]::placeholder, textarea::placeholder {
             <span class="lang-flag" id="room-lang-flag">🌐</span>
             <span class="lang-text" id="room-lang-text">EN</span>
           </button>
-          <button id="btn-room-legal" class="btn btn-sm btn-ghost" title="Yasal Uyarı, Gizlilik & Şartlar">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-            <span class="hide-mobile" data-i18n="btn_legal">Yasal Uyarı</span>
-          </button>
           <button id="btn-show-qr" class="btn btn-sm btn-outline" title="Cihaz Ekle / QR Kod">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
             <span class="hide-mobile" data-i18n="btn_qr">QR Kod</span>
@@ -2244,6 +2242,20 @@ input[type="text"]::placeholder, textarea::placeholder {
           </div>
         </section>
       </div>
+
+      <!-- Room Footer -->
+      <footer class="room-footer" style="margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border-subtle); text-align: center;">
+        <div class="footer-links" style="display: flex; justify-content: center; align-items: center; gap: 12px; margin-bottom: 8px; flex-wrap: wrap;">
+          <a href="#" class="footer-link link-room-legal" id="link-room-legal-privacy" data-i18n="footer_privacy">Gizlilik Bildirimi</a>
+          <span class="footer-dot">•</span>
+          <a href="#" class="footer-link link-room-legal" id="link-room-legal-terms" data-i18n="footer_terms">Kullanım Şartları</a>
+          <span class="footer-dot">•</span>
+          <a href="#" class="footer-link link-room-legal" id="link-room-legal-disclaimer" data-i18n="footer_disclaimer">Sorumluluk Reddi</a>
+        </div>
+        <div class="footer-copy" data-i18n="footer_copy" style="font-size: 0.76rem; color: var(--text-dim);">
+          Ulak — RAM üzerinde çalışan geçici ve anlık veri aktarım servisi. Sunucuda kalıcı log tutulmaz.
+        </div>
+      </footer>
     </main>
 
     <!-- ========================================== -->
