@@ -217,6 +217,17 @@ location / {
 
 ## 🇬🇧 English Documentation
 
+### 🌐 Live Showcase Demo & Capacity Warning
+- **Live Demo Instance:** [https://okanyesilyurt.com/c](https://okanyesilyurt.com/c)
+
+> [!WARNING]
+> **Server Capacity & Usage Notice:**  
+> The instance at `https://okanyesilyurt.com/c` is a personal showcase/demo hosted on limited private server hardware. It is **not designed or sized to handle global public traffic or heavy file uploads**.  
+> If you plan to use Ulak regularly for personal, team, or production workflows, please **self-host your own free instance**:
+> - **Shared Web Hosting (cPanel / Apache / LiteSpeed):** 1-minute zero-configuration setup using PHP (no Node.js required).
+> - **Local Wi-Fi Network (LAN):** 100% offline & local data exchange with no external servers.
+> - **Docker / VPS:** Deploy in 10 seconds via `docker compose up -d`.
+
 ### What is Ulak?
 In history, an **Ulak** was an express courier entrusted with delivering critical messages swiftly and securely. 
 Today, **Ulak** is a 100% free and open-source cross-device temporary clipboard and collaborative livepad that works seamlessly without accounts, apps, or databases.
