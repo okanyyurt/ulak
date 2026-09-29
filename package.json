@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node --watch server.js"
+    "dev": "node --watch server.js",
+    "deploy": "node deploy.js"
   },
   "keywords": [
     "ulak",
@@ -32,6 +33,8 @@
     "socket.io": "^4.8.4"
   },
   "devDependencies": {
+    "basic-ftp": "^6.2.1",
+    "dotenv": "^18.0.4",
     "socket.io-client": "^4.8.4"
   }
 }
