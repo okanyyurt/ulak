@@ -959,6 +959,8 @@ input[type="text"]::placeholder, textarea::placeholder {
   white-space: pre-wrap;
   font-size: 0.96rem;
   line-height: 1.6;
+  user-select: text;
+  -webkit-user-select: text;
 }
 
 /* Hyperlinks in clip */
@@ -1764,11 +1766,15 @@ input[type="text"]::placeholder, textarea::placeholder {
   line-height: 1.55;
   color: #e2e8f0;
   background: transparent;
+  user-select: text;
+  -webkit-user-select: text;
 }
 
 .code-pre code {
   font-family: inherit;
   white-space: pre;
+  user-select: text;
+  -webkit-user-select: text;
 }
 
 /* Inline Code Pill with Mini Copy Icon */

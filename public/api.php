@@ -137,6 +137,7 @@ if ($action === 'create_room' || ($_SERVER['REQUEST_METHOD'] === 'POST' && isset
         'burnTriggeredAt' => null,
         'burnExpiresAt' => null,
         'items' => [],
+        'itemsModified' => microtime(true),
         'livePad' => '',
         'livePadChunks' => [],
         'livePadUpdatedBy' => '',
@@ -232,6 +233,7 @@ if ($action === 'get_room') {
         'burnTriggeredAt' => $room['burnTriggeredAt'],
         'deviceCount' => max(1, $activeCount),
         'items' => $room['items'],
+        'itemsModified' => $room['itemsModified'] ?? 0,
         'livePad' => $room['livePad'],
         'livePadChunks' => $room['livePadChunks'] ?? [],
         'livePadUpdatedBy' => $room['livePadUpdatedBy'] ?? '',
@@ -279,6 +281,7 @@ if ($action === 'add_item') {
         array_pop($room['items']);
     }
 
+    $room['itemsModified'] = microtime(true);
     saveRoom($filePath, $room);
 
     echo json_encode(['success' => true, 'item' => $newItem]);
@@ -298,6 +301,7 @@ if ($action === 'delete_item') {
         $room['items'] = array_values(array_filter($room['items'], function($i) use ($itemId) {
             return $i['id'] !== $itemId;
         }));
+        $room['itemsModified'] = microtime(true);
         saveRoom($filePath, $room);
     }
 
@@ -314,6 +318,7 @@ if ($action === 'clear_items') {
     $room = readRoom($filePath);
     if ($room) {
         $room['items'] = [];
+        $room['itemsModified'] = microtime(true);
         saveRoom($filePath, $room);
     }
     echo json_encode(['success' => true]);

@@ -510,6 +510,8 @@
   let isTypingInLivePad = false;
   let livePadDebounceTimeout = null;
   let lastServerModified = 0;
+  let lastServerItemsModified = 0;
+  let lastRenderedClipsSignature = '';
   let lastLocalPadChangeTime = 0;
   let phpPollInterval = null;
   let socket = null;
@@ -804,6 +806,111 @@
       .replace(/'/g, '&#039;');
   }
 
+  const LANG_HEADER_REGEX = /^\s*(?:(?:Copy(?:\s+code)?|Kopyala)\s+)?(bash|shell|sh|zsh|terminal|powershell|ps1|cmd|command\s+prompt|python|py|javascript|js|typescript|ts|html|css|json|sql|php|c|cpp|c\+\+|c#|csharp|go|golang|rust|ruby|swift|kotlin|yaml|yml|xml|dockerfile|makefile)\s*$/i;
+
+  const CLI_CMD_LIST = [
+    // Packages & OS
+    'sudo', 'apt', 'apt-get', 'aptitude', 'dpkg', 'pacman', 'yum', 'dnf', 'zypper', 'apk', 'snap', 'flatpak', 'brew', 'port',
+    // Disks & Boot
+    'mount', 'umount', 'chroot', 'grub-install', 'grub2-install', 'update-grub', 'update-grub2', 'grub-mkconfig', 'bootctl', 'efibootmgr',
+    'fdisk', 'cfdisk', 'gdisk', 'parted', 'gparted', 'lsblk', 'blkid', 'mkfs', 'mkfs\\.ext[234]', 'mkfs\\.vfat', 'mkfs\\.ntfs', 'fsck', 'e2fsck', 'dd',
+    // System & Services
+    'systemctl', 'journalctl', 'service', 'crontab', 'ps', 'top', 'htop', 'btop', 'kill', 'killall', 'pkill', 'pgrep', 'nohup',
+    // Files & Directories
+    'cd', 'pwd', 'ls', 'll', 'la', 'dir', 'mkdir', 'rmdir', 'rm', 'cp', 'mv', 'touch', 'ln', 'chmod', 'chown', 'chgrp',
+    // Text & Search
+    'cat', 'less', 'more', 'head', 'tail', 'grep', 'egrep', 'fgrep', 'sed', 'awk', 'cut', 'sort', 'uniq', 'wc', 'tr', 'diff', 'patch', 'tee', 'xargs', 'find', 'which', 'whereis',
+    // Shell built-ins & environment
+    'echo', 'printf', 'read', 'export', 'source', 'alias', 'unalias', 'set', 'unset', 'env', 'history', 'clear', 'reset', 'exit', 'logout', 'reboot', 'shutdown', 'poweroff',
+    // Network
+    'ip', 'ifconfig', 'netstat', 'ss', 'ping', 'ping6', 'traceroute', 'tracepath', 'dig', 'nslookup', 'curl', 'wget', 'ssh', 'scp', 'sftp', 'rsync', 'ufw', 'iptables', 'ssh-keygen',
+    // Hardware & Kernel
+    'df', 'du', 'free', 'uptime', 'uname', 'dmesg', 'lspci', 'lsusb', 'modprobe', 'insmod', 'rmmod', 'lsmod',
+    // Dev & Runtimes
+    'git', 'docker', 'docker-compose', 'podman', 'kubectl', 'helm',
+    'npm', 'npx', 'yarn', 'pnpm', 'bun', 'deno', 'node', 'nodemon',
+    'pip', 'pip3', 'python', 'python3', 'py', 'composer', 'php', 'artisan', 'cargo', 'rustc', 'go', 'dotnet', 'mvn', 'gradle', 'make',
+    'nano', 'vim', 'vi', 'nvim', 'code'
+  ].join('|');
+
+  const CLI_REGEX = new RegExp(`^(\\$|#|>|\\./)?\\s*(${CLI_CMD_LIST})($|\\s+.*)$`, 'i');
+
+  function isShellConstruct(line) {
+    const t = (line || '').trim();
+    if (!t) return false;
+    if (/^(for\s+[a-zA-Z0-9_]+\s+in\s+|while\s+|until\s+|if\s+\[|case\s+)/i.test(t)) return true;
+    if (/^(do|done|then|else|elif|fi|esac)$/i.test(t)) return true;
+    if (/^(export\s+)?[A-Z_][A-Z0-9_]*=/.test(t)) return true;
+    return false;
+  }
+
+  function isCommandLine(line) {
+    const t = (line || '').trim();
+    if (!t) return false;
+    if (isShellConstruct(t)) return true;
+    const stripped = t.replace(/^[\$#>]\s*/, '');
+    return CLI_REGEX.test(stripped);
+  }
+
+  function isCodeLineForLang(line, lang, prevLineEndedContinuation = false) {
+    const t = (line || '').trim();
+    if (!t) return false;
+
+    // Narrative notes and sections to exclude
+    if (t.startsWith('(') && (t.endsWith(')') || t.endsWith(').'))) return false;
+    if (/^(adım|step|bölüm|not|note|warning|uyarı|ipucu|tip)\s*\d*[:\-.]/i.test(t)) return false;
+
+    const upperLang = (lang || '').toUpperCase();
+
+    // Bash / Shell CLI
+    if (!upperLang || ['BASH', 'SHELL', 'SH', 'ZSH', 'TERMINAL', 'POWERSHELL', 'PS1', 'CMD', 'COMMAND PROMPT'].includes(upperLang)) {
+      if (isCommandLine(t) || isShellConstruct(t)) return true;
+      if (/^[\$#>]\s+[a-zA-Z0-9_\-\.\/]+/.test(t)) return true;
+      if (prevLineEndedContinuation) return true;
+      if (/^(--[a-zA-Z0-9_\-]+|-[a-zA-Z0-9]+)/.test(t)) return true;
+      if (/^#\s+.*$/.test(t)) return true;
+      if (/^[A-Za-z_][A-Za-z0-9_]*=[^\s]+/.test(t)) return true;
+    }
+
+    // Python
+    if (upperLang === 'PYTHON' || upperLang === 'PY') {
+      if (/^(def\s+|class\s+|import\s+|from\s+|if\s+|elif\s+|else:|while\s+|for\s+|try:|except.*:|finally:|return\b|print\(|yield\b|raise\b|with\s+|@|#)/.test(t)) return true;
+      if (line.startsWith('    ') || line.startsWith('\t')) return true;
+      if (/^[a-zA-Z_][a-zA-Z0-9_]*\s*=\s*.+/.test(t)) return true;
+    }
+
+    // JS / TS
+    if (['JAVASCRIPT', 'JS', 'TYPESCRIPT', 'TS', 'NODE'].includes(upperLang)) {
+      if (/^(const\s+|let\s+|var\s+|function\b|class\b|import\s+|export\s+|return\b|if\s*\(|for\s*\(|while\s*\(|switch\s*\(|try\s*\{|catch\s*\(|\/\/|\/\*|\*|console\.)/.test(t)) return true;
+      if (line.startsWith('  ') || line.startsWith('\t')) return true;
+      if (t.endsWith(';') || t.endsWith('{') || t.endsWith('}') || t.includes('=>')) return true;
+    }
+
+    // JSON
+    if (upperLang === 'JSON') {
+      if (/^(\{|\}|\[|\]|".*"\s*:\s*.*,?)$/.test(t)) return true;
+    }
+
+    // SQL
+    if (upperLang === 'SQL') {
+      if (/^(SELECT|INSERT|UPDATE|DELETE|CREATE|ALTER|DROP|FROM|WHERE|JOIN|GROUP\s+BY|ORDER\s+BY|HAVING|LIMIT)\b/i.test(t)) return true;
+    }
+
+    // PHP
+    if (upperLang === 'PHP') {
+      if (/^(<\?php|\$[a-zA-Z0-9_]+|function\s+|class\s+|namespace\s+|use\s+|echo\s+|return\s+)/.test(t)) return true;
+    }
+
+    // General code markers
+    if (upperLang && upperLang !== 'BASH') {
+      if (/^[a-zA-Z_][a-zA-Z0-9_]*\s*\(.*\)\s*[{;]?$/.test(t)) return true;
+      if (/^[{}[\]();,]+$/.test(t)) return true;
+      if (line.startsWith('  ') || line.startsWith('\t')) return true;
+    }
+
+    return false;
+  }
+
   function looksLikeRawCode(text) {
     const trimmed = (text || '').trim();
     if (!trimmed) return null;
@@ -814,53 +921,110 @@
     if (/^<!DOCTYPE\s+html|<html[\s>]|<svg[\s>]/i.test(trimmed)) return 'HTML';
     if (/^(const|let|var|function|import|export|class)\s+[a-zA-Z0-9_$]+/m.test(trimmed) && (trimmed.includes(';') || trimmed.includes('{'))) return 'JAVASCRIPT';
     if (/^(def\s+[a-zA-Z0-9_$]+\s*\(|from\s+[a-zA-Z0-9_.]+\s+import|import\s+[a-zA-Z0-9_]+)/m.test(trimmed)) return 'PYTHON';
-    if (/^(npm|yarn|pnpm|git|docker|docker-compose|curl|wget|sudo|chmod|chown|pip|composer|systemctl|service|ssh|apt|brew|kubectl)\s+[^\n]+/i.test(trimmed)) return 'BASH';
     return null;
   }
 
-  function isCommandLine(line) {
-    const t = (line || '').trim();
-    if (!t) return false;
-    const cmd = t.replace(/^[\$#>]\s+/, '');
-    return /^(npm|npx|yarn|pnpm|pip|pip3|python|python3|node|php|composer|git|docker|docker-compose|curl|wget|sudo|chmod|chown|systemctl|service|ssh|scp|mkdir|rm|mv|cp|apt|apt-get|brew|dotnet|cargo|kubectl|pm2|nvm|deno|bun)\s+[^\n]+$/i.test(cmd);
+  function preProcessAutoCodeBlocks(rawText) {
+    if (!rawText) return '';
+    if (rawText.includes('```')) return rawText;
+
+    const rawLang = looksLikeRawCode(rawText);
+    if (rawLang) {
+      return '```' + rawLang + '\n' + rawText.trim() + '\n```';
+    }
+
+    const lines = rawText.split('\n');
+    const result = [];
+    let i = 0;
+
+    while (i < lines.length) {
+      const line = lines[i];
+      const trimmed = line.trim();
+
+      // Check if line is a language header like "Bash", "Python", "JavaScript"
+      const langMatch = trimmed.match(LANG_HEADER_REGEX);
+      if (langMatch) {
+        const detectedLang = langMatch[1].toUpperCase();
+        let j = i + 1;
+        const codeBuffer = [];
+        let prevContinuation = false;
+
+        while (j < lines.length) {
+          const nextLine = lines[j];
+          const nextTrimmed = nextLine.trim();
+
+          // Empty line handling
+          if (!nextTrimmed) {
+            if (codeBuffer.length > 0 && j + 1 < lines.length) {
+              const peekTrimmed = lines[j + 1].trim();
+              if (isCodeLineForLang(peekTrimmed, detectedLang, false)) {
+                codeBuffer.push(nextLine);
+                j++;
+                continue;
+              }
+            }
+            break;
+          }
+
+          // If nextLine is another language header, stop this block
+          if (LANG_HEADER_REGEX.test(nextTrimmed)) {
+            break;
+          }
+
+          if (isCodeLineForLang(nextLine, detectedLang, prevContinuation)) {
+            codeBuffer.push(nextLine);
+            prevContinuation = nextTrimmed.endsWith('\\') || nextTrimmed.endsWith('|') || nextTrimmed.endsWith('&&');
+            j++;
+          } else {
+            break;
+          }
+        }
+
+        if (codeBuffer.length > 0) {
+          result.push('```' + detectedLang + '\n' + codeBuffer.join('\n').trim() + '\n```');
+          i = j;
+          continue;
+        }
+      }
+
+      // Normal command line sequence (without language header)
+      if (isCodeLineForLang(trimmed, 'BASH', false)) {
+        const codeBuffer = [line];
+        let prevContinuation = trimmed.endsWith('\\') || trimmed.endsWith('|') || trimmed.endsWith('&&');
+        let j = i + 1;
+
+        while (j < lines.length) {
+          const nextLine = lines[j];
+          const nextTrimmed = nextLine.trim();
+          if (!nextTrimmed) break;
+          if (LANG_HEADER_REGEX.test(nextTrimmed)) break;
+
+          if (isCodeLineForLang(nextLine, 'BASH', prevContinuation)) {
+            codeBuffer.push(nextLine);
+            prevContinuation = nextTrimmed.endsWith('\\') || nextTrimmed.endsWith('|') || nextTrimmed.endsWith('&&');
+            j++;
+          } else {
+            break;
+          }
+        }
+
+        result.push('```BASH\n' + codeBuffer.join('\n').trim() + '\n```');
+        i = j;
+        continue;
+      }
+
+      result.push(line);
+      i++;
+    }
+
+    return result.join('\n');
   }
 
   function parseFormattedContent(text) {
     if (!text) return '';
 
-    let workingText = text;
-
     // Auto-detect code blocks if not already formatted with markdown backticks
-    if (!workingText.includes('```')) {
-      const rawLang = looksLikeRawCode(workingText);
-      if (rawLang) {
-        workingText = '```' + rawLang + '\n' + workingText.trim() + '\n```';
-      } else {
-        const lines = workingText.split('\n');
-        const newLines = [];
-        let inCmdBlock = false;
-        let cmdBuffer = [];
-
-        for (let i = 0; i < lines.length; i++) {
-          const line = lines[i];
-          if (isCommandLine(line)) {
-            inCmdBlock = true;
-            cmdBuffer.push(line.trim());
-          } else {
-            if (inCmdBlock) {
-              newLines.push('```BASH\n' + cmdBuffer.join('\n') + '\n```');
-              cmdBuffer = [];
-              inCmdBlock = false;
-            }
-            newLines.push(line);
-          }
-        }
-        if (inCmdBlock) {
-          newLines.push('```BASH\n' + cmdBuffer.join('\n') + '\n```');
-        }
-        workingText = newLines.join('\n');
-      }
-    }
+    let workingText = preProcessAutoCodeBlocks(text);
 
     // 1. Extract markdown fenced code blocks: ```lang ... ```
     const codeBlocks = [];
@@ -1264,8 +1428,11 @@
         startTtlCountdown();
         updateDeviceCount(data.deviceCount || 1);
 
-        // Check if new items exist
-        if (data.lastModified !== lastServerModified) {
+        // Check if items changed (by itemsModified or items signature)
+        const currentItemsSig = (data.items || []).map(i => `${i.id}_${i.createdAt}`).join('|');
+        const itemsChanged = currentItemsSig !== lastRenderedClipsSignature || (data.itemsModified && data.itemsModified !== lastServerItemsModified);
+        if (itemsChanged) {
+          lastServerItemsModified = data.itemsModified || 0;
           lastServerModified = data.lastModified;
           renderAllClips(data.items || []);
         }
@@ -1362,24 +1529,7 @@
     countdownTimerInterval = setInterval(update, 1000);
   }
 
-  function renderAllClips(items) {
-    clipsContainer.innerHTML = '';
-    if (!items || items.length === 0) {
-      clipsContainer.appendChild(emptyClipsPlaceholder);
-      emptyClipsPlaceholder.classList.remove('hidden');
-    } else {
-      emptyClipsPlaceholder.classList.add('hidden');
-      items.forEach(item => addClipToDom(item, false));
-    }
-    updateClipsCounter();
-  }
-
-  function addClipToDom(item, prepend = true) {
-    // If element already exists, skip
-    if (document.getElementById(`clip-${item.id}`)) return;
-
-    emptyClipsPlaceholder.classList.add('hidden');
-
+  function createClipCardElement(item) {
     const card = document.createElement('div');
     const isMine = item.senderDeviceId === myDeviceId || (!item.senderDeviceId && item.senderName === myDeviceName);
     card.className = `clip-card ${isMine ? 'clip-outgoing' : 'clip-incoming'}`;
@@ -1457,7 +1607,7 @@
           await copyToClipboard(code);
           const origHtml = btn.innerHTML;
           btn.classList.add('copied');
-          btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg><span>Kopyalandı!</span>`;
+          btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg><span>${t('toast_copied', 'Kopyalandı!')}</span>`;
           setTimeout(() => {
             btn.classList.remove('copied');
             btn.innerHTML = origHtml;
@@ -1499,6 +1649,7 @@
           socket.emit('delete_item', { itemId: item.id });
         } else {
           card.remove();
+          lastRenderedClipsSignature = '';
           updateClipsCounter();
           await fetch(`${BASE_PATH}/api.php?action=delete_item`, {
             method: 'POST',
@@ -1516,12 +1667,63 @@
       });
     }
 
+    return card;
+  }
+
+  function renderAllClips(items) {
+    const signature = (items || []).map(i => `${i.id}_${i.createdAt}`).join('|');
+    if (signature === lastRenderedClipsSignature) {
+      return; // Exact same list: do not touch DOM, preventing active text selections from dropping!
+    }
+    lastRenderedClipsSignature = signature;
+
+    if (!items || items.length === 0) {
+      clipsContainer.innerHTML = '';
+      clipsContainer.appendChild(emptyClipsPlaceholder);
+      emptyClipsPlaceholder.classList.remove('hidden');
+      updateClipsCounter();
+      return;
+    }
+
+    emptyClipsPlaceholder.classList.add('hidden');
+    const incomingIds = new Set(items.map(item => String(item.id)));
+
+    // 1. Remove only deleted cards
+    clipsContainer.querySelectorAll('.clip-card').forEach(card => {
+      const id = card.id.replace(/^clip-/, '');
+      if (!incomingIds.has(id)) {
+        card.remove();
+      }
+    });
+
+    // 2. Reconcile in proper order (items[0] is at top) without re-creating existing cards
+    for (let idx = 0; idx < items.length; idx++) {
+      const item = items[idx];
+      let card = document.getElementById(`clip-${item.id}`);
+      if (!card) {
+        card = createClipCardElement(item);
+      }
+      const existingAtPos = clipsContainer.children[idx];
+      if (existingAtPos !== card) {
+        clipsContainer.insertBefore(card, existingAtPos || null);
+      }
+    }
+
+    updateClipsCounter();
+  }
+
+  function addClipToDom(item, prepend = true) {
+    if (document.getElementById(`clip-${item.id}`)) return;
+    emptyClipsPlaceholder.classList.add('hidden');
+
+    const card = createClipCardElement(item);
     if (prepend && clipsContainer.firstChild) {
       clipsContainer.insertBefore(card, clipsContainer.firstChild);
     } else {
       clipsContainer.appendChild(card);
     }
 
+    lastRenderedClipsSignature = '';
     updateClipsCounter();
   }
 
