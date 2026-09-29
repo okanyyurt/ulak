@@ -359,6 +359,229 @@ if ($action === 'destroy_room') {
     exit;
 }
 
+// =============================================================
+// ADMIN CONTROLS & API ACTIONS (Protected)
+// =============================================================
+define('ADMIN_USER', getenv('ADMIN_USER') ?: 'admin');
+define('ADMIN_PASS', getenv('ADMIN_PASS') ?: 'admin');
+
+function verifyAdminToken($storageDir) {
+    $token = '';
+    $headers = function_exists('getallheaders') ? getallheaders() : [];
+    if (!empty($headers['Authorization']) && preg_match('/Bearer\s+(\S+)/i', $headers['Authorization'], $m)) {
+        $token = $m[1];
+    } elseif (!empty($headers['authorization']) && preg_match('/Bearer\s+(\S+)/i', $headers['authorization'], $m)) {
+        $token = $m[1];
+    } elseif (!empty($headers['x-admin-token'])) {
+        $token = $headers['x-admin-token'];
+    } elseif (!empty($_GET['admin_token'])) {
+        $token = $_GET['admin_token'];
+    } elseif (!empty($_POST['admin_token'])) {
+        $token = $_POST['admin_token'];
+    }
+
+    if (!$token) return false;
+
+    $tokensFile = $storageDir . 'admin_tokens.json';
+    if (!file_exists($tokensFile)) return false;
+    $tokens = @json_decode(file_get_contents($tokensFile), true);
+    if (!is_array($tokens) || !isset($tokens[$token])) return false;
+
+    if (time() > $tokens[$token]) {
+        unset($tokens[$token]);
+        @file_put_contents($tokensFile, json_encode($tokens), LOCK_EX);
+        return false;
+    }
+
+    return true;
+}
+
+function formatBytesPhp($bytes) {
+    if (!$bytes || $bytes <= 0) return '0 B';
+    $units = ['B', 'KB', 'MB', 'GB'];
+    $pow = floor(log($bytes, 1024));
+    return round($bytes / pow(1024, $pow), 1) . ' ' . $units[$pow];
+}
+
+// ACTION: ADMIN LOGIN
+if ($action === 'admin_login') {
+    $user = $input['username'] ?? '';
+    $pass = $input['password'] ?? '';
+    if ($user === ADMIN_USER && $pass === ADMIN_PASS) {
+        $token = bin2hex(random_bytes(24));
+        $tokensFile = $storageDir . 'admin_tokens.json';
+        $tokens = file_exists($tokensFile) ? @json_decode(file_get_contents($tokensFile), true) : [];
+        if (!is_array($tokens)) $tokens = [];
+        $tokens[$token] = time() + 86400; // 24h
+        @file_put_contents($tokensFile, json_encode($tokens), LOCK_EX);
+
+        echo json_encode([
+            'success' => true,
+            'token' => $token,
+            'username' => ADMIN_USER,
+            'expiresAt' => (time() + 86400) * 1000
+        ]);
+        exit;
+    }
+    http_response_code(401);
+    echo json_encode(['error' => 'Kullanıcı adı veya şifre hatalı.']);
+    exit;
+}
+
+// ACTION: ADMIN LOGOUT
+if ($action === 'admin_logout') {
+    $token = $_GET['admin_token'] ?? '';
+    if ($token) {
+        $tokensFile = $storageDir . 'admin_tokens.json';
+        if (file_exists($tokensFile)) {
+            $tokens = @json_decode(file_get_contents($tokensFile), true);
+            if (is_array($tokens)) {
+                unset($tokens[$token]);
+                @file_put_contents($tokensFile, json_encode($tokens), LOCK_EX);
+            }
+        }
+    }
+    echo json_encode(['success' => true]);
+    exit;
+}
+
+// ACTION: ADMIN GET ROOMS & STATS
+if ($action === 'admin_rooms') {
+    if (!verifyAdminToken($storageDir)) {
+        http_response_code(401);
+        echo json_encode(['error' => 'Yetkisiz erişim. Lütfen admin girişi yapın.']);
+        exit;
+    }
+
+    $files = @glob($storageDir . 'room_*.json');
+    $roomList = [];
+    $totalSizeBytes = 0;
+    $totalItems = 0;
+    $totalDevices = 0;
+
+    if ($files) {
+        foreach ($files as $file) {
+            $size = @filesize($file) ?: 0;
+            $content = @file_get_contents($file);
+            $room = $content ? @json_decode($content, true) : null;
+            if (!$room) continue;
+
+            $totalSizeBytes += $size;
+            $itemsCount = !empty($room['items']) ? count($room['items']) : 0;
+            $totalItems += $itemsCount;
+            $devCount = !empty($room['devices']) ? count($room['devices']) : 1;
+            $totalDevices += $devCount;
+
+            $deviceNames = [];
+            if (!empty($room['devices']) && is_array($room['devices'])) {
+                foreach ($room['devices'] as $d) {
+                    $deviceNames[] = $d['name'] ?? 'Cihaz';
+                }
+            }
+
+            $roomList[] = [
+                'id' => $room['id'] ?? basename($file, '.json'),
+                'createdAt' => isset($room['createdAt']) ? $room['createdAt'] * 1000 : filemtime($file) * 1000,
+                'ttlMode' => $room['ttlMode'] ?? '1h',
+                'expiresAt' => isset($room['expiresAt']) ? $room['expiresAt'] * 1000 : null,
+                'burnCountdownSeconds' => $room['burnCountdownSeconds'] ?? null,
+                'burnTriggeredAt' => isset($room['burnTriggeredAt']) ? $room['burnTriggeredAt'] * 1000 : null,
+                'deviceCount' => $devCount,
+                'deviceNames' => $deviceNames,
+                'itemCount' => $itemsCount,
+                'hasLivePad' => !empty(trim($room['livePad'] ?? '')),
+                'livePadLength' => strlen($room['livePad'] ?? ''),
+                'sizeBytes' => $size,
+                'sizeFormatted' => formatBytesPhp($size)
+            ];
+        }
+    }
+
+    usort($roomList, function($a, $b) {
+        return ($b['createdAt'] ?? 0) - ($a['createdAt'] ?? 0);
+    });
+
+    echo json_encode([
+        'success' => true,
+        'rooms' => $roomList,
+        'stats' => [
+            'totalRooms' => count($roomList),
+            'totalDevices' => $totalDevices,
+            'totalItems' => $totalItems,
+            'totalSizeBytes' => $totalSizeBytes,
+            'totalSizeFormatted' => formatBytesPhp($totalSizeBytes),
+            'phpVersion' => PHP_VERSION,
+            'engine' => 'php'
+        ]
+    ]);
+    exit;
+}
+
+// ACTION: ADMIN DESTROY SINGLE ROOM
+if ($action === 'admin_destroy_room') {
+    if (!verifyAdminToken($storageDir)) {
+        http_response_code(401);
+        echo json_encode(['error' => 'Yetkisiz erişim.']);
+        exit;
+    }
+
+    $roomId = !empty($input['roomId']) ? trim($input['roomId']) : '';
+    if (!$roomId) {
+        echo json_encode(['error' => 'Oda ID gerekli']);
+        exit;
+    }
+
+    $filePath = getRoomFilePath($storageDir, $roomId);
+    if (file_exists($filePath)) {
+        @unlink($filePath);
+    }
+    echo json_encode(['success' => true, 'message' => "Oda ($roomId) silindi."]);
+    exit;
+}
+
+// ACTION: ADMIN DESTROY BATCH
+if ($action === 'admin_destroy_batch') {
+    if (!verifyAdminToken($storageDir)) {
+        http_response_code(401);
+        echo json_encode(['error' => 'Yetkisiz erişim.']);
+        exit;
+    }
+
+    $roomIds = $input['roomIds'] ?? [];
+    $deleted = 0;
+    if (is_array($roomIds)) {
+        foreach ($roomIds as $id) {
+            $filePath = getRoomFilePath($storageDir, $id);
+            if (file_exists($filePath)) {
+                @unlink($filePath);
+                $deleted++;
+            }
+        }
+    }
+    echo json_encode(['success' => true, 'count' => $deleted, 'message' => "$deleted adet oturum silindi."]);
+    exit;
+}
+
+// ACTION: ADMIN DESTROY ALL
+if ($action === 'admin_destroy_all') {
+    if (!verifyAdminToken($storageDir)) {
+        http_response_code(401);
+        echo json_encode(['error' => 'Yetkisiz erişim.']);
+        exit;
+    }
+
+    $files = @glob($storageDir . 'room_*.json');
+    $count = 0;
+    if ($files) {
+        foreach ($files as $f) {
+            @unlink($f);
+            $count++;
+        }
+    }
+    echo json_encode(['success' => true, 'count' => $count, 'message' => "Tüm oturumlar ($count adet) silindi."]);
+    exit;
+}
+
 // Default response
 echo json_encode([
     'status' => 'online',

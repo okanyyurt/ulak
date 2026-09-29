@@ -39,6 +39,62 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // In-Memory ephemeral storage (Zero disk footprint)
 const rooms = new Map();
 
+// Admin credentials & session storage
+const ADMIN_USER = process.env.ADMIN_USER || 'admin';
+const ADMIN_PASS = process.env.ADMIN_PASS || 'admin';
+const adminTokens = new Map(); // token -> expiresAt (timestamp)
+
+function formatBytes(bytes, decimals = 1) {
+  if (!bytes || bytes === 0) return '0 B';
+  const k = 1024;
+  const dm = decimals < 0 ? 0 : decimals;
+  const sizes = ['B', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+}
+
+function calculateRoomSize(room) {
+  let bytes = 0;
+  if (room.items && room.items.length) {
+    for (const item of room.items) {
+      if (item.content) {
+        bytes += Buffer.byteLength(item.content, 'utf8');
+      }
+      bytes += 256;
+    }
+  }
+  if (room.livePad) {
+    bytes += Buffer.byteLength(room.livePad, 'utf8');
+  }
+  if (room.livePadChunks && room.livePadChunks.length) {
+    for (const c of room.livePadChunks) {
+      if (c.t) bytes += Buffer.byteLength(c.t, 'utf8');
+      bytes += 64;
+    }
+  }
+  bytes += 512;
+  return bytes;
+}
+
+function requireAdmin(req, res, next) {
+  const authHeader = req.headers.authorization || '';
+  const token = authHeader.startsWith('Bearer ')
+    ? authHeader.slice(7)
+    : (req.headers['x-admin-token'] || req.query.admin_token || req.query.token);
+
+  if (!token || !adminTokens.has(token)) {
+    return res.status(401).json({ error: 'Yetkisiz erişim. Lütfen admin girişi yapın.' });
+  }
+
+  const expiresAt = adminTokens.get(token);
+  if (Date.now() > expiresAt) {
+    adminTokens.delete(token);
+    return res.status(401).json({ error: 'Oturum süresi doldu. Lütfen tekrar giriş yapın.' });
+  }
+
+  next();
+}
+
 // Helper: Get local network IPv4 address for seamless LAN QR scanning
 function getLocalIpAddress() {
   const interfaces = os.networkInterfaces();
@@ -193,6 +249,139 @@ router.get('/api/qr', async (req, res) => {
 // Direct room links: /s/:roomId or /:roomId (e.g. /a123 or /s/a123)
 router.get('/s/:roomId', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Admin Panel Web Route
+router.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'admin.html'));
+});
+
+// =============================================================
+// ADMIN API ENDPOINTS (Protected)
+// =============================================================
+
+// 1. Admin Login
+router.post('/api/admin/login', (req, res) => {
+  const { username, password } = req.body || {};
+  if (username === ADMIN_USER && password === ADMIN_PASS) {
+    const token = crypto.randomBytes(32).toString('hex');
+    const expiresAt = Date.now() + 24 * 60 * 60 * 1000;
+    adminTokens.set(token, expiresAt);
+    return res.json({
+      success: true,
+      token,
+      username: ADMIN_USER,
+      expiresAt
+    });
+  }
+  return res.status(401).json({ error: 'Kullanıcı adı veya şifre hatalı.' });
+});
+
+// 2. Admin Logout
+router.post('/api/admin/logout', requireAdmin, (req, res) => {
+  const authHeader = req.headers.authorization || '';
+  const token = authHeader.startsWith('Bearer ')
+    ? authHeader.slice(7)
+    : (req.headers['x-admin-token'] || req.query.admin_token);
+  if (token) adminTokens.delete(token);
+  res.json({ success: true, message: 'Çıkış yapıldı.' });
+});
+
+// 3. Admin Get All Rooms & Server Metrics
+router.get('/api/admin/rooms', requireAdmin, (req, res) => {
+  const roomList = [];
+  let totalSizeBytes = 0;
+  let totalItems = 0;
+  let totalDevices = 0;
+
+  for (const [id, room] of rooms.entries()) {
+    const sizeBytes = calculateRoomSize(room);
+    totalSizeBytes += sizeBytes;
+    totalItems += (room.items || []).length;
+    const deviceCount = room.connectedDevices ? room.connectedDevices.size : 0;
+    totalDevices += deviceCount;
+
+    const deviceNames = room.connectedDevices ? Array.from(room.connectedDevices.values()) : [];
+
+    roomList.push({
+      id: room.id,
+      createdAt: room.createdAt,
+      ttlMode: room.ttlMode,
+      expiresAt: room.expiresAt,
+      burnCountdownSeconds: room.burnCountdownSeconds,
+      burnTriggeredAt: room.burnTriggeredAt,
+      deviceCount,
+      deviceNames,
+      itemCount: (room.items || []).length,
+      hasLivePad: Boolean(room.livePad && room.livePad.trim()),
+      livePadLength: (room.livePad || '').length,
+      sizeBytes,
+      sizeFormatted: formatBytes(sizeBytes)
+    });
+  }
+
+  roomList.sort((a, b) => b.createdAt - a.createdAt);
+
+  res.json({
+    success: true,
+    rooms: roomList,
+    stats: {
+      totalRooms: roomList.length,
+      totalDevices,
+      totalItems,
+      totalSizeBytes,
+      totalSizeFormatted: formatBytes(totalSizeBytes),
+      memoryRss: formatBytes(process.memoryUsage().rss),
+      uptimeSeconds: Math.floor(process.uptime())
+    }
+  });
+});
+
+// 4. Admin Destroy Single Room
+router.post('/api/admin/destroy_room', requireAdmin, (req, res) => {
+  const { roomId } = req.body || {};
+  if (!roomId) return res.status(400).json({ error: 'Oda ID belirtilmedi.' });
+  const cleanId = roomId.toLowerCase().trim();
+
+  if (rooms.has(cleanId)) {
+    io.to(cleanId).emit('room_destroyed', {
+      reason: 'Bu oturum yönetici tarafından kapatıldı ve silindi.'
+    });
+    rooms.delete(cleanId);
+    return res.json({ success: true, message: `Oda (${cleanId}) başarıyla kapatıldı ve silindi.` });
+  }
+  return res.status(404).json({ error: 'Oda bulunamadı veya zaten silinmiş.' });
+});
+
+// 5. Admin Destroy Batch of Rooms
+router.post('/api/admin/destroy_batch', requireAdmin, (req, res) => {
+  const { roomIds } = req.body || {};
+  if (!Array.isArray(roomIds)) return res.status(400).json({ error: 'roomIds dizisi gerekli.' });
+
+  let deletedCount = 0;
+  for (const id of roomIds) {
+    const cleanId = (id || '').toLowerCase().trim();
+    if (rooms.has(cleanId)) {
+      io.to(cleanId).emit('room_destroyed', {
+        reason: 'Bu oturum yönetici tarafından kapatıldı ve silindi.'
+      });
+      rooms.delete(cleanId);
+      deletedCount++;
+    }
+  }
+  res.json({ success: true, count: deletedCount, message: `${deletedCount} adet oturum başarıyla silindi.` });
+});
+
+// 6. Admin Destroy All Rooms
+router.post('/api/admin/destroy_all', requireAdmin, (req, res) => {
+  const count = rooms.size;
+  for (const [id] of rooms.entries()) {
+    io.to(id).emit('room_destroyed', {
+      reason: 'Tüm oturumlar yönetici tarafından kapatıldı ve silindi.'
+    });
+  }
+  rooms.clear();
+  res.json({ success: true, count, message: `Tüm oturumlar (${count} adet) başarıyla temizlendi.` });
 });
 
 // Fallback for SPA (serves index.html for any other route like /a123 or /chat/a123)

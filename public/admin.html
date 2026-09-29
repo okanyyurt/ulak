@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Ulak — Yönetici Paneli</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Admin Dashboard Specific Enhancements */
+    .admin-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 20px 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-subtle);
+      flex-wrap: wrap;
+    }
+
+    .admin-brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .badge-admin {
+      background: rgba(99, 102, 241, 0.2);
+      color: #818cf8;
+      border: 1px solid rgba(99, 102, 241, 0.4);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .admin-top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* Stats Grid */
+    .admin-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 18px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 22px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      backdrop-filter: blur(20px);
+      box-shadow: var(--shadow-sm);
+      transition: all 0.2s ease;
+    }
+
+    .stat-card:hover {
+      border-color: rgba(56, 189, 248, 0.4);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .stat-icon-wrap {
+      width: 52px;
+      height: 52px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      flex-shrink: 0;
+    }
+
+    .stat-icon-rooms { background: rgba(16, 185, 129, 0.12); color: var(--accent-emerald); }
+    .stat-icon-storage { background: rgba(56, 189, 248, 0.12); color: var(--accent-sky); }
+    .stat-icon-devices { background: rgba(245, 158, 11, 0.12); color: var(--accent-amber); }
+    .stat-icon-items { background: rgba(168, 85, 247, 0.12); color: var(--accent-violet); }
+
+    .stat-meta {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .stat-value {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--text-main);
+      font-family: var(--font-mono);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .stat-sub {
+      font-size: 0.76rem;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+
+    /* Controls Bar */
+    .admin-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      background: rgba(15, 23, 42, 0.6);
+      padding: 14px 18px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .search-box-wrap {
+      flex: 1;
+      min-width: 260px;
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 9px 14px 9px 38px;
+      color: var(--text-main);
+      font-size: 0.9rem;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--accent-sky);
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      pointer-events: none;
+    }
+
+    .toolbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* Table Styles */
+    .admin-table-wrap {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      overflow-x: auto;
+      box-shadow: var(--shadow-md);
+      backdrop-filter: blur(20px);
+    }
+
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    .admin-table th {
+      background: rgba(0, 0, 0, 0.4);
+      padding: 14px 16px;
+      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--border-subtle);
+      white-space: nowrap;
+    }
+
+    .admin-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      vertical-align: middle;
+      color: var(--text-main);
+    }
+
+    .admin-table tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .room-code-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(6, 182, 212, 0.12);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      color: var(--accent-sky);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 0.92rem;
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+
+    .room-code-badge:hover {
+      background: rgba(6, 182, 212, 0.25);
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+
+    .size-pill {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.06);
+      color: #cbd5e1;
+    }
+
+    .device-chips-cell {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      max-width: 280px;
+    }
+
+    .dev-chip {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    /* Login Screen Card */
+    .admin-login-screen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 70vh;
+      padding: 20px;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 420px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 36px 30px;
+      box-shadow: var(--shadow-lg);
+      backdrop-filter: blur(24px);
+      text-align: center;
+    }
+
+    .login-logo-wrap {
+      margin-bottom: 20px;
+    }
+
+    .login-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .login-desc {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      margin-bottom: 26px;
+      line-height: 1.5;
+    }
+
+    .form-group-login {
+      text-align: left;
+      margin-bottom: 18px;
+    }
+
+    .form-group-login label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text-muted);
+    }
+
+    .login-input {
+      width: 100%;
+      padding: 12px 14px;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      color: var(--text-main);
+      font-size: 0.95rem;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+
+    .login-input:focus {
+      outline: none;
+      border-color: var(--accent-indigo);
+      background: rgba(0, 0, 0, 0.5);
+      box-shadow: 0 0 12px rgba(99, 102, 241, 0.3);
+    }
+
+    /* Auto refresh pill */
+    .auto-refresh-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border-subtle);
+      padding: 5px 10px;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .auto-refresh-pill input {
+      cursor: pointer;
+    }
+
+    .empty-admin-state {
+      padding: 50px 20px;
+      text-align: center;
+      color: var(--text-muted);
+    }
+
+    .empty-admin-icon {
+      font-size: 3rem;
+      margin-bottom: 12px;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+  <!-- Ambient background glow elements -->
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+
+  <div class="admin-container">
+    <!-- ========================================== -->
+    <!-- 1. LOGIN SCREEN                            -->
+    <!-- ========================================== -->
+    <div id="admin-login-screen" class="admin-login-screen">
+      <div class="login-card">
+        <div class="login-logo-wrap">
+          <svg class="brand-icon" style="width: 48px; height: 48px;" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="brand-grad-l" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#06b6d4"/><stop offset="100%" stop-color="#6366f1"/></linearGradient>
+              <linearGradient id="arrow-grad-l1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#38bdf8"/><stop offset="100%" stop-color="#06b6d4"/></linearGradient>
+              <linearGradient id="arrow-grad-l2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#818cf8"/><stop offset="100%" stop-color="#a855f7"/></linearGradient>
+            </defs>
+            <rect width="64" height="64" rx="16" fill="#0f172a" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+            <circle cx="32" cy="32" r="22" fill="url(#brand-grad-l)" opacity="0.15"/>
+            <path d="M18 32C18 24.27 24.27 18 32 18C38.2 18 43.47 22.05 45.24 27.7" stroke="url(#arrow-grad-l1)" stroke-width="4.5" stroke-linecap="round"/>
+            <polyline points="39 28.5 45.5 28.5 47 22" stroke="url(#arrow-grad-l1)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M46 32C46 39.73 39.73 46 32 46C25.8 46 20.53 41.95 18.76 36.3" stroke="url(#arrow-grad-l2)" stroke-width="4.5" stroke-linecap="round"/>
+            <polyline points="25 35.5 18.5 35.5 17 42" stroke="url(#arrow-grad-l2)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="32" cy="32" r="3.5" fill="#38bdf8"/>
+          </svg>
+        </div>
+        <h2 class="login-title">Ulak Yönetici Girişi</h2>
+        <p class="login-desc">Aktif oturumları görüntülemek, bellek kullanımını incelemek ve oturumları yönetmek için giriş yapınız.</p>
+
+        <form id="admin-login-form">
+          <div class="form-group-login">
+            <label for="login-username">Kullanıcı Adı</label>
+            <input type="text" id="login-username" class="login-input" value="admin" required autocomplete="username">
+          </div>
+          <div class="form-group-login">
+            <label for="login-password">Şifre</label>
+            <input type="password" id="login-password" class="login-input" value="admin" required autocomplete="current-password">
+          </div>
+          <button type="submit" id="btn-do-login" class="btn btn-primary btn-large btn-glow" style="margin-top: 10px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
+            <span>Yönetici Olarak Giriş Yap</span>
+          </button>
+        </form>
+        <div style="margin-top: 18px; font-size: 0.78rem; color: var(--text-dim);">
+          Varsayılan Giriş: <code>admin</code> / <code>admin</code>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 2. ADMIN DASHBOARD                         -->
+    <!-- ========================================== -->
+    <div id="admin-dashboard" class="hidden">
+      <!-- Top Bar -->
+      <header class="admin-header">
+        <div class="admin-brand-group">
+          <a href="./" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit;">
+            <svg class="brand-icon" style="width: 38px; height: 38px;" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs><linearGradient id="brand-grad-d" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#06b6d4"/><stop offset="100%" stop-color="#6366f1"/></linearGradient></defs>
+              <rect width="64" height="64" rx="16" fill="#0f172a" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+              <circle cx="32" cy="32" r="22" fill="url(#brand-grad-d)" opacity="0.15"/>
+              <path d="M18 32C18 24.27 24.27 18 32 18C38.2 18 43.47 22.05 45.24 27.7" stroke="#38bdf8" stroke-width="4.5" stroke-linecap="round"/>
+              <polyline points="39 28.5 45.5 28.5 47 22" stroke="#38bdf8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M46 32C46 39.73 39.73 46 32 46C25.8 46 20.53 41.95 18.76 36.3" stroke="#818cf8" stroke-width="4.5" stroke-linecap="round"/>
+              <polyline points="25 35.5 18.5 35.5 17 42" stroke="#818cf8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="32" cy="32" r="3.5" fill="#38bdf8"/>
+            </svg>
+            <span style="font-size: 1.4rem; font-weight: 800; letter-spacing: -0.02em;">Ulak</span>
+          </a>
+          <span class="badge-admin">Yönetim Paneli</span>
+        </div>
+
+        <div class="admin-top-actions">
+          <label class="auto-refresh-pill">
+            <input type="checkbox" id="chk-auto-refresh" checked>
+            <span>Canlı Yenile (5s)</span>
+          </label>
+          <button type="button" class="btn btn-sm btn-secondary" id="btn-refresh" title="Oturumları ve verileri yenile">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+            <span>Yenile</span>
+          </button>
+          <a href="./" class="btn btn-sm btn-outline">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+            <span>Ana Sayfa</span>
+          </a>
+          <button type="button" class="btn btn-sm btn-ghost" id="btn-logout" title="Yönetici oturumunu kapat">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+            <span>Çıkış Yap</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Stat KPI Cards -->
+      <section class="admin-stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon-wrap stat-icon-rooms">🏠</div>
+          <div class="stat-meta">
+            <div class="stat-label">Aktif Oturumlar</div>
+            <div class="stat-value" id="stat-total-rooms">0</div>
+            <div class="stat-sub">Sunucuda açık oda sayısı</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon-wrap stat-icon-storage">💾</div>
+          <div class="stat-meta">
+            <div class="stat-label">Toplam Kaplanan Alan</div>
+            <div class="stat-value" id="stat-total-size">0 KB</div>
+            <div class="stat-sub">Geçici RAM bellek boyutu</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon-wrap stat-icon-devices">📱</div>
+          <div class="stat-meta">
+            <div class="stat-label">Bağlı Cihazlar</div>
+            <div class="stat-value" id="stat-total-devices">0</div>
+            <div class="stat-sub">Anlık bağlı istemciler</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon-wrap stat-icon-items">📋</div>
+          <div class="stat-meta">
+            <div class="stat-label">Toplam Paylaşım</div>
+            <div class="stat-value" id="stat-total-items">0</div>
+            <div class="stat-sub">Metin, kod ve fotoğraflar</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Action Toolbar -->
+      <section class="admin-toolbar">
+        <div class="search-box-wrap">
+          <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input type="text" id="search-rooms-input" class="search-input" placeholder="Oda koduna veya cihaz adına göre filtrele...">
+        </div>
+
+        <div class="toolbar-actions">
+          <span id="selected-summary" style="font-size: 0.85rem; color: var(--text-dim); margin-right: 4px;">0 oda seçili</span>
+          <button type="button" id="btn-batch-delete" class="btn btn-sm btn-secondary text-danger" style="display: none;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            <span>Seçilenleri Sil (<span id="batch-count">0</span>)</span>
+          </button>
+          <button type="button" id="btn-purge-all" class="btn btn-sm btn-danger">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+            <span>Tüm Odaları Kapat & Temizle</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Rooms Table -->
+      <section class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th style="width: 40px; text-align: center;">
+                <input type="checkbox" id="chk-select-all" title="Tümünü Seç">
+              </th>
+              <th>Oda Kodu</th>
+              <th>Oluşturulma & Kalan Süre</th>
+              <th>Bağlı Cihazlar</th>
+              <th>İçerik & Boyut</th>
+              <th style="text-align: right;">İşlemler</th>
+            </tr>
+          </thead>
+          <tbody id="rooms-table-body">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+        <div id="empty-rooms-msg" class="empty-admin-state hidden">
+          <div class="empty-admin-icon">🕊️</div>
+          <h3 style="color: var(--text-main); margin-bottom: 6px;">Şu Anda Açık Aktif Oturum Bulunmuyor</h3>
+          <p style="font-size: 0.88rem;">Kullanıcılar yeni bir paylaşım odası açtığında burada anlık listelenecektir.</p>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Modal: Confirm Delete Room -->
+  <div id="admin-confirm-modal" class="modal-backdrop hidden">
+    <div class="modal-dialog modal-dialog-sm text-center">
+      <div class="destroy-alert-icon" style="font-size: 2.8rem; margin-bottom: 12px;">💣</div>
+      <h3 class="modal-title" id="admin-modal-title" style="justify-content: center; margin-bottom: 8px;">Oturumu Kapat & Sil?</h3>
+      <p class="modal-desc" id="admin-modal-desc">Bu işlem oturumdaki tüm verileri ve notları sunucu belleğinden kalıcı olarak silecektir.</p>
+      <div class="modal-buttons" style="display: flex; gap: 10px; margin-top: 20px;">
+        <button type="button" class="btn btn-secondary" id="btn-admin-modal-cancel" style="flex: 1;">Vazgeç</button>
+        <button type="button" class="btn btn-danger" id="btn-admin-modal-confirm" style="flex: 1;">Evet, Sil</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container" class="toast-container"></div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // Base path calculation
+      const pathname = window.location.pathname;
+      const segments = pathname.replace(/^\\/+|\\/+$/g, '').split('/').filter(Boolean);
+      let basePath = '';
+      if (segments.length >= 1 && (segments[0] === 'c' || segments[0] === 'chat')) {
+        basePath = '/' + segments[0];
+      }
+      const baseUrl = window.location.origin + (basePath ? basePath + '/' : '/');
+
+      // State
+      let adminToken = localStorage.getItem('ulak_admin_token') || null;
+      let activeRooms = [];
+      let autoRefreshTimer = null;
+      let pendingDeleteAction = null;
+
+      // DOM Elements
+      const loginScreen = document.getElementById('admin-login-screen');
+      const dashboard = document.getElementById('admin-dashboard');
+      const loginForm = document.getElementById('admin-login-form');
+      const inputUser = document.getElementById('login-username');
+      const inputPass = document.getElementById('login-password');
+      const btnLogout = document.getElementById('btn-logout');
+      const btnRefresh = document.getElementById('btn-refresh');
+      const chkAutoRefresh = document.getElementById('chk-auto-refresh');
+      const searchInput = document.getElementById('search-rooms-input');
+      const chkSelectAll = document.getElementById('chk-select-all');
+      const btnBatchDelete = document.getElementById('btn-batch-delete');
+      const batchCountEl = document.getElementById('batch-count');
+      const selectedSummary = document.getElementById('selected-summary');
+      const btnPurgeAll = document.getElementById('btn-purge-all');
+      const tableBody = document.getElementById('rooms-table-body');
+      const emptyMsg = document.getElementById('empty-rooms-msg');
+
+      // Stats Elements
+      const statTotalRooms = document.getElementById('stat-total-rooms');
+      const statTotalSize = document.getElementById('stat-total-size');
+      const statTotalDevices = document.getElementById('stat-total-devices');
+      const statTotalItems = document.getElementById('stat-total-items');
+
+      // Modal Elements
+      const confirmModal = document.getElementById('admin-confirm-modal');
+      const modalTitle = document.getElementById('admin-modal-title');
+      const modalDesc = document.getElementById('admin-modal-desc');
+      const btnModalCancel = document.getElementById('btn-admin-modal-cancel');
+      const btnModalConfirm = document.getElementById('btn-admin-modal-confirm');
+      const toastContainer = document.getElementById('toast-container');
+
+      function showToast(message, type = 'normal') {
+        const toast = document.createElement('div');
+        toast.className = `toast ${type === 'danger' ? 'toast-danger' : type === 'success' ? 'toast-success' : ''}`;
+        toast.innerHTML = `<span>${message}</span>`;
+        toastContainer.appendChild(toast);
+        setTimeout(() => {
+          toast.style.opacity = '0';
+          toast.style.transform = 'translateY(10px)';
+          setTimeout(() => toast.remove(), 300);
+        }, 2600);
+      }
+
+      async function apiFetch(endpoint, options = {}) {
+        options.headers = options.headers || {};
+        if (adminToken) {
+          options.headers['Authorization'] = `Bearer ${adminToken}`;
+          options.headers['x-admin-token'] = adminToken;
+        }
+
+        // Try Node.js API path first
+        let url = `${basePath}/api/admin/${endpoint}`;
+        try {
+          const res = await fetch(url, options);
+          if (res.status === 404) {
+            throw new Error('Fallback to PHP');
+          }
+          return res;
+        } catch (e) {
+          // Fallback to PHP backend (api.php)
+          const phpUrl = `${basePath}/api.php?action=admin_${endpoint}&admin_token=${encodeURIComponent(adminToken || '')}`;
+          return fetch(phpUrl, options);
+        }
+      }
+
+      async function checkAuthAndLoad() {
+        if (!adminToken) {
+          showLogin();
+          return;
+        }
+
+        try {
+          const res = await apiFetch('rooms');
+          if (res.ok) {
+            const data = await res.json();
+            showDashboard();
+            renderDashboard(data);
+          } else {
+            adminToken = null;
+            localStorage.removeItem('ulak_admin_token');
+            showLogin();
+          }
+        } catch (err) {
+          console.error(err);
+          showToast('Sunucuya bağlanılamadı.', 'danger');
+        }
+      }
+
+      function showLogin() {
+        loginScreen.classList.remove('hidden');
+        dashboard.classList.add('hidden');
+        if (autoRefreshTimer) clearInterval(autoRefreshTimer);
+      }
+
+      function showDashboard() {
+        loginScreen.classList.add('hidden');
+        dashboard.classList.remove('hidden');
+        setupAutoRefresh();
+      }
+
+      loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const username = inputUser.value.trim();
+        const password = inputPass.value;
+
+        try {
+          let res = await fetch(`${basePath}/api/admin/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+          });
+
+          if (res.status === 404) {
+            // PHP fallback
+            res = await fetch(`${basePath}/api.php?action=admin_login`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ username, password })
+            });
+          }
+
+          const data = await res.json();
+          if (res.ok && data.success) {
+            adminToken = data.token;
+            localStorage.setItem('ulak_admin_token', adminToken);
+            showToast('Giriş başarılı!', 'success');
+            checkAuthAndLoad();
+          } else {
+            showToast(data.error || 'Giriş başarısız.', 'danger');
+          }
+        } catch (err) {
+          showToast('Giriş yapılırken sunucu hatası oluştu.', 'danger');
+        }
+      });
+
+      btnLogout.addEventListener('click', async () => {
+        try {
+          await apiFetch('logout', { method: 'POST' });
+        } catch (e) {}
+        adminToken = null;
+        localStorage.removeItem('ulak_admin_token');
+        showToast('Çıkış yapıldı.');
+        showLogin();
+      });
+
+      btnRefresh.addEventListener('click', async () => {
+        btnRefresh.disabled = true;
+        await refreshRooms();
+        btnRefresh.disabled = false;
+        showToast('Veriler güncellendi.');
+      });
+
+      async function refreshRooms() {
+        if (!adminToken) return;
+        try {
+          const res = await apiFetch('rooms');
+          if (res.ok) {
+            const data = await res.json();
+            renderDashboard(data);
+          } else if (res.status === 401) {
+            adminToken = null;
+            localStorage.removeItem('ulak_admin_token');
+            showLogin();
+          }
+        } catch (e) {}
+      }
+
+      function setupAutoRefresh() {
+        if (autoRefreshTimer) clearInterval(autoRefreshTimer);
+        if (chkAutoRefresh.checked) {
+          autoRefreshTimer = setInterval(refreshRooms, 5000);
+        }
+      }
+
+      chkAutoRefresh.addEventListener('change', setupAutoRefresh);
+
+      function formatTimeAgo(timestamp) {
+        if (!timestamp) return 'Bilinmiyor';
+        const sec = Math.floor((Date.now() - timestamp) / 1000);
+        if (sec < 60) return `${sec} sn önce`;
+        const min = Math.floor(sec / 60);
+        if (min < 60) return `${min} dk önce`;
+        const hours = Math.floor(min / 60);
+        return `${hours} saat önce`;
+      }
+
+      function formatTtlRemaining(room) {
+        if (room.ttlMode === 'burn_read' && !room.burnTriggeredAt) {
+          return '<span style="color: #fb923c; font-weight: 600;">🔥 Okunduğunda İmha</span>';
+        }
+        if (!room.expiresAt) return '<span class="text-muted">Süresiz</span>';
+
+        const diff = room.expiresAt - Date.now();
+        if (diff <= 0) {
+          return '<span style="color: var(--accent-rose); font-weight: 700;">⏳ Süresi Doldu</span>';
+        }
+        const min = Math.floor(diff / 60000);
+        const sec = Math.floor((diff % 60000) / 1000);
+        if (min < 2) {
+          return `<span style="color: var(--accent-rose); font-weight: 700;">⏱️ ${min}:${sec.toString().padStart(2, '0')} kaldı</span>`;
+        }
+        return `<span style="color: var(--accent-amber); font-weight: 600;">⏱️ ${min} dk kaldı</span>`;
+      }
+
+      function renderDashboard(data) {
+        const stats = data.stats || {};
+        activeRooms = data.rooms || [];
+
+        statTotalRooms.textContent = stats.totalRooms || activeRooms.length;
+        statTotalSize.textContent = stats.totalSizeFormatted || '0 B';
+        statTotalDevices.textContent = stats.totalDevices || 0;
+        statTotalItems.textContent = stats.totalItems || 0;
+
+        renderTable();
+      }
+
+      function renderTable() {
+        const filter = searchInput.value.toLowerCase().trim();
+        const filtered = activeRooms.filter(r => {
+          if (!filter) return true;
+          if (r.id.toLowerCase().includes(filter)) return true;
+          if (r.deviceNames && r.deviceNames.some(d => d.toLowerCase().includes(filter))) return true;
+          return false;
+        });
+
+        tableBody.innerHTML = '';
+        if (filtered.length === 0) {
+          emptyMsg.classList.remove('hidden');
+        } else {
+          emptyMsg.classList.add('hidden');
+        }
+
+        filtered.forEach(room => {
+          const tr = document.createElement('tr');
+          tr.setAttribute('data-room-id', room.id);
+
+          const roomUrl = `${baseUrl}${room.id}`;
+          const deviceNamesStr = (room.deviceNames && room.deviceNames.length > 0)
+            ? room.deviceNames.map(d => `<span class="dev-chip">${escapeHtml(d)}</span>`).join('')
+            : '<span class="text-dim" style="font-size: 0.8rem;">(Cihaz bağlı değil)</span>';
+
+          tr.innerHTML = `
+            <td style="text-align: center;">
+              <input type="checkbox" class="chk-room-select" value="${room.id}">
+            </td>
+            <td>
+              <a href="${roomUrl}" target="_blank" class="room-code-badge" title="Odayı yeni sekmede aç">
+                <span>${escapeHtml(room.id)}</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+              </a>
+            </td>
+            <td>
+              <div>${formatTtlRemaining(room)}</div>
+              <div style="font-size: 0.76rem; color: var(--text-dim); margin-top: 3px;">${formatTimeAgo(room.createdAt)}</div>
+            </td>
+            <td>
+              <div style="margin-bottom: 4px; font-weight: 700; font-size: 0.82rem; color: var(--accent-emerald);">
+                ${room.deviceCount} Cihaz
+              </div>
+              <div class="device-chips-cell">
+                ${deviceNamesStr}
+              </div>
+            </td>
+            <td>
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                <span class="size-pill">${room.sizeFormatted || '0 B'}</span>
+                <span style="font-size: 0.82rem; color: var(--text-muted);">${room.itemCount || 0} Öğe</span>
+              </div>
+              ${room.hasLivePad ? `<div style="font-size: 0.74rem; color: var(--accent-sky);">📝 LivePad: ${room.livePadLength} karakter</div>` : ''}
+            </td>
+            <td style="text-align: right; white-space: nowrap;">
+              <a href="${roomUrl}" target="_blank" class="btn btn-sm btn-outline" style="padding: 6px 10px; font-size: 0.8rem; margin-right: 6px;" title="Odaya Katıl">
+                👁️ Git
+              </a>
+              <button type="button" class="btn btn-sm btn-danger btn-delete-single" data-id="${room.id}" style="padding: 6px 10px; font-size: 0.8rem;" title="Oturumu Kapat ve Bellekten Sil">
+                🗑️ Sil
+              </button>
+            </td>
+          `;
+
+          tableBody.appendChild(tr);
+        });
+
+        bindTableEvents();
+        updateSelectedSummary();
+      }
+
+      function bindTableEvents() {
+        tableBody.querySelectorAll('.btn-delete-single').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const roomId = btn.getAttribute('data-id');
+            askConfirmation(
+              `Oda (${roomId}) Kapatılsın mı?`,
+              `Bu oturumu kapattığınızda odadaki tüm metinler, kodlar ve görseller sunucudan kalıcı olarak silinecektir.`,
+              async () => {
+                await deleteSingleRoom(roomId);
+              }
+            );
+          });
+        });
+
+        tableBody.querySelectorAll('.chk-room-select').forEach(chk => {
+          chk.addEventListener('change', updateSelectedSummary);
+        });
+      }
+
+      function updateSelectedSummary() {
+        const checked = tableBody.querySelectorAll('.chk-room-select:checked');
+        const count = checked.length;
+        batchCountEl.textContent = count;
+        selectedSummary.textContent = `${count} oda seçili`;
+
+        if (count > 0) {
+          btnBatchDelete.style.display = 'inline-flex';
+        } else {
+          btnBatchDelete.style.display = 'none';
+        }
+      }
+
+      chkSelectAll.addEventListener('change', () => {
+        const isChecked = chkSelectAll.checked;
+        tableBody.querySelectorAll('.chk-room-select').forEach(chk => {
+          chk.checked = isChecked;
+        });
+        updateSelectedSummary();
+      });
+
+      searchInput.addEventListener('input', renderTable);
+
+      async function deleteSingleRoom(roomId) {
+        try {
+          const res = await apiFetch('destroy_room', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ roomId })
+          });
+          const data = await res.json();
+          if (res.ok && data.success) {
+            showToast(`Oda (${roomId}) başarıyla silindi.`, 'success');
+            await refreshRooms();
+          } else {
+            showToast(data.error || 'Silme işlemi başarısız.', 'danger');
+          }
+        } catch (err) {
+          showToast('İşlem sırasında hata oluştu.', 'danger');
+        }
+      }
+
+      btnBatchDelete.addEventListener('click', () => {
+        const checked = Array.from(tableBody.querySelectorAll('.chk-room-select:checked')).map(c => c.value);
+        if (checked.length === 0) return;
+
+        askConfirmation(
+          `Seçilen ${checked.length} Oda Silinsin mi?`,
+          `Seçtiğiniz ${checked.length} adet oturum kapatılacak ve içlerindeki tüm veriler bellekten tamamen silinecektir.`,
+          async () => {
+            try {
+              const res = await apiFetch('destroy_batch', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ roomIds: checked })
+              });
+              const data = await res.json();
+              if (res.ok && data.success) {
+                showToast(`${checked.length} adet oturum başarıyla silindi.`, 'success');
+                chkSelectAll.checked = false;
+                await refreshRooms();
+              } else {
+                showToast(data.error || 'Toplu silme başarısız.', 'danger');
+              }
+            } catch (err) {
+              showToast('İşlem sırasında hata oluştu.', 'danger');
+            }
+          }
+        );
+      });
+
+      btnPurgeAll.addEventListener('click', () => {
+        askConfirmation(
+          'TÜM Oturumlar Kapatılsın ve Temizlensin mi?',
+          'DİKKAT: Bu işlem sunucuda açık olan TÜM oturumları anında sonlandıracak ve belleği sıfırlayacaktır. Bu işlem geri alınamaz!',
+          async () => {
+            try {
+              const res = await apiFetch('destroy_all', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+              });
+              const data = await res.json();
+              if (res.ok && data.success) {
+                showToast('Tüm oturumlar başarıyla temizlendi.', 'success');
+                chkSelectAll.checked = false;
+                await refreshRooms();
+              } else {
+                showToast(data.error || 'Temizleme başarısız.', 'danger');
+              }
+            } catch (err) {
+              showToast('İşlem sırasında hata oluştu.', 'danger');
+            }
+          }
+        );
+      });
+
+      function askConfirmation(title, desc, onConfirm) {
+        modalTitle.textContent = title;
+        modalDesc.textContent = desc;
+        pendingDeleteAction = onConfirm;
+        confirmModal.classList.remove('hidden');
+      }
+
+      btnModalCancel.addEventListener('click', () => {
+        confirmModal.classList.add('hidden');
+        pendingDeleteAction = null;
+      });
+
+      btnModalConfirm.addEventListener('click', async () => {
+        confirmModal.classList.add('hidden');
+        if (typeof pendingDeleteAction === 'function') {
+          const action = pendingDeleteAction;
+          pendingDeleteAction = null;
+          await action();
+        }
+      });
+
+      confirmModal.addEventListener('click', (e) => {
+        if (e.target === confirmModal) {
+          confirmModal.classList.add('hidden');
+          pendingDeleteAction = null;
+        }
+      });
+
+      function escapeHtml(str) {
+        if (!str) return '';
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      }
+
+      // Check on startup
+      checkAuthAndLoad();
+    })();
+  </script>
+</body>
+</html>

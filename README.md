@@ -87,6 +87,19 @@ Odayı açın (veya 4 karakterli kısa kodla katılın), QR kodu okutun ve verin
 - **15 Dakika**, **1 Saat** (Varsayılan), **8 Saat** veya **24 Saat**.
 - **Manuel Acil İmha:** Kırmızı *"İmha Et"* butonuyla anında sıfırlama.
 
+### 🎛️ Yönetici Paneli (Admin Dashboard)
+- **Erişim Adresi:** `/admin` (veya `admin.html`)
+- **Varsayılan Giriş Bilgileri:**
+  - **Kullanıcı Adı:** `admin`
+  - **Şifre:** `admin`
+- **Yönetim Özellikleri:**
+  - Aktif tüm oturumları ve bağlı cihazları canlı listeleme.
+  - Oturumların ve genel sistemin **kapladığı toplam RAM / bellek boyutunu** (B, KB, MB) görüntüleme.
+  - İstenmeyen veya süresi geçmiş oturumları **tek tek silme**.
+  - Çoklu seçim ile **toplu silme** (Batch Delete) veya tek tıkla tüm oturumları sıfırlama (Purge All).
+  - Canlı otomatik yenileme (Auto-Refresh) ve hızlı oda arama/filtreleme.
+  - Hem Node.js hem de PHP motorlarında sıfır konfigürasyonla tam uyumlu çalışma.
+
 ### 🛡️ Sıfır Disk İzi (Zero-Storage RAM)
 - Veriler sunucu sabit diskine veya bir SQL veritabanına **asla kaydedilmez**.
 - Her şey Node.js veya PHP oturum belleğinde (RAM) geçici olarak yaşar ve süre dolunca tamamen buharlaşır.
@@ -237,14 +250,14 @@ Today, **Ulak** is a 100% free and open-source cross-device temporary clipboard 
 - 💬 **WhatsApp-Style Bubbles:** Your own device on the right, other devices on the left with distinct colors and device names.
 - 💻 **Smart Code Snippet Detection:** Formats programming code into sleek terminal boxes with dedicated copy buttons.
 - 📝 **LivePad Collaboration:** Real-time synchronized notepad with subtle neon author highlights.
-- 🖼️ **Clipboard Image Paste:** Paste screenshots directly using `Ctrl+V`, full lightbox preview, and client-side image compression.
 - 🔥 **Self-Destruct (TTL):** Burn on read (60s), 15m, 1h, 8h, 24h, or instant manual purge.
+- 🎛️ **Admin Dashboard (`/admin`):** Monitor active sessions, inspect RAM memory sizes, close/delete single or batch rooms (`admin`/`admin`).
 - 🛡️ **Zero Disk Footprint:** RAM-only storage. Nothing is saved to disks or databases.
 
 ### Installation Options
 
 #### 1. Zero-Setup PHP Shared Hosting (cPanel / Apache / LiteSpeed)
-Upload `api.php`, `index.php`, `app.js`, `style.css`, `qrcode.min.js`, `.htaccess`, and `assets/` to your web directory via FTP. No Node.js, no database required!
+Upload `api.php`, `index.php`, `admin.html`, `app.js`, `style.css`, `qrcode.min.js`, `.htaccess`, and `assets/` to your web directory via FTP. No Node.js, no database required!
 
 #### 2. Local Network (LAN / Wi-Fi) Sharing
 If your devices are on the same Wi-Fi, run locally without exposing data to the public internet:
@@ -276,7 +289,7 @@ node test_sync.js
 
 ```
 ulak/
-├── server.js              # Node.js + Express + Socket.IO sunucusu (RAM yönetimi & TTL)
+├── server.js              # Node.js + Express + Socket.IO sunucusu (RAM yönetimi & Admin API)
 ├── package.json           # Proje ayarları ve scriptleri
 ├── test_sync.js           # Çoklu istemci senkronizasyon simülasyon testi
 ├── Dockerfile             # Docker imaj yapılandırması
@@ -285,9 +298,10 @@ ulak/
 ├── README.md              # Kapsamlı dökümantasyon (TR & EN)
 ├── .gitignore             # Git yok sayma kuralları
 ├── .htaccess              # Apache URL yönlendirmeleri (REST & kısa linkler)
-├── api.php                # PHP REST/Polling arka plan motoru (cPanel & paylaşımlı hosting)
+├── api.php                # PHP REST/Polling arka plan motoru & Admin API
 ├── index.php              # PHP tabanlı tam fonksiyonel tek-dosya arayüzü
 ├── index.html             # Standart modern HTML5 arayüzü
+├── admin.html             # Kapsamlı yönetici paneli (Oturum izleme, RAM boyutu & silme)
 ├── style.css              # Koyu cam (Glassmorphism) teması & WhatsApp mesaj balonları
 ├── app.js                 # Pano istemcisi, WebSocket/Polling köprüsü, kod renklendirme
 ├── qrcode.min.js          # Çevrimdışı QR kod oluşturucu

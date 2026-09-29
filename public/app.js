@@ -191,7 +191,12 @@
       toast_room_code_copied: "Oda kodu panoya kopyalandı!",
       toast_link_copied: "Oda bağlantısı panoya kopyalandı!",
       livepad_highlight_on: "Vurgu: Açık",
-      livepad_highlight_off: "Vurgu: Kapalı"
+      livepad_highlight_off: "Vurgu: Kapalı",
+      modal_paste_title: "Panodan Yapıştır",
+      modal_paste_desc: "Tarayıcı güvenlik kısıtlaması nedeniyle panoya doğrudan erişilemedi. Aşağıdaki kutucuğa tıklayıp <strong>Ctrl + V</strong> (Mac: <strong>Cmd + V</strong>) veya mobilde <strong>Yapıştır</strong> yapabilirsiniz:",
+      modal_paste_zone_hint: "Buraya tıklayın ve Ctrl+V yapın",
+      modal_paste_placeholder: "Panodakini buraya yapıştırın (Metin veya Görsel)...",
+      footer_admin: "Yönetici"
     },
     en: {
       lang_name: "EN",
@@ -300,7 +305,12 @@
       toast_room_code_copied: "Room code copied to clipboard!",
       toast_link_copied: "Room link copied to clipboard!",
       livepad_highlight_on: "Highlights: On",
-      livepad_highlight_off: "Highlights: Off"
+      livepad_highlight_off: "Highlights: Off",
+      modal_paste_title: "Paste from Clipboard",
+      modal_paste_desc: "Browser security blocked automatic clipboard read. Please click the box below and press <strong>Ctrl + V</strong> (Mac: <strong>Cmd + V</strong>) or tap and <strong>Paste</strong> on mobile:",
+      modal_paste_zone_hint: "Click here and press Ctrl+V",
+      modal_paste_placeholder: "Paste clipboard content here (Text or Image)...",
+      footer_admin: "Admin"
     }
   };
 
@@ -568,6 +578,13 @@
   const btnLightboxDownload = document.getElementById('btn-lightbox-download');
   const destroyConfirmModal = document.getElementById('destroy-confirm-modal');
   const btnCancelDestroy = document.getElementById('btn-cancel-destroy');
+
+  // Quick Paste Dropzone Modal
+  const quickPasteModal = document.getElementById('quick-paste-modal');
+  const btnClosePasteModal = document.getElementById('btn-close-paste-modal');
+  const btnCancelPasteModal = document.getElementById('btn-cancel-paste-modal');
+  const quickPasteZone = document.getElementById('quick-paste-zone');
+  const quickPasteInput = document.getElementById('quick-paste-input');
   const btnConfirmDestroy = document.getElementById('btn-confirm-destroy');
   const destroyedScreen = document.getElementById('destroyed-screen');
   const destroyedReasonText = document.getElementById('destroyed-reason-text');
@@ -1029,14 +1046,27 @@
     imageUploadInput.value = '';
   }
 
-  async function handlePasteAction() {
-    try {
-      if (!navigator.clipboard) {
-        showToast('Panoya erişim desteklenmiyor.', 'danger');
-        return;
-      }
+  function openQuickPasteModal() {
+    if (!quickPasteModal) return;
+    quickPasteModal.classList.remove('hidden');
+    if (quickPasteInput) {
+      quickPasteInput.value = '';
+      setTimeout(() => {
+        quickPasteInput.focus();
+      }, 60);
+    }
+  }
 
-      if (navigator.clipboard.read) {
+  function closeQuickPasteModal() {
+    if (!quickPasteModal) return;
+    quickPasteModal.classList.add('hidden');
+    if (quickPasteInput) quickPasteInput.value = '';
+  }
+
+  async function handlePasteAction() {
+    // 1. Attempt clipboard.read() (supports image detection directly)
+    if (navigator.clipboard && typeof navigator.clipboard.read === 'function') {
+      try {
         const items = await navigator.clipboard.read();
         for (const item of items) {
           const imageType = item.types.find(t => t.startsWith('image/'));
@@ -1044,23 +1074,36 @@
             const blob = await item.getType(imageType);
             const file = new File([blob], `clipboard-image-${Date.now()}.png`, { type: imageType });
             await handleImageFile(file);
-            showToast('Panodaki görsel eklendi!', 'success');
+            showToast(t('toast_img_pasted'), 'success');
             return;
           }
         }
+      } catch (readErr) {
+        // Fallback silently if browser blocks clipboard.read()
+        console.warn('Clipboard read() rejected/unsupported:', readErr);
       }
-
-      const text = await navigator.clipboard.readText();
-      if (text) {
-        composerText.value = (composerText.value ? composerText.value + '\n' : '') + text;
-        composerText.focus();
-        showToast('Panodaki metin yapıştırıldı!', 'success');
-      } else {
-        showToast('Pano boş.', 'danger');
-      }
-    } catch (err) {
-      showToast('Lütfen panoya erişim izni verin.', 'danger');
     }
+
+    // 2. Attempt clipboard.readText() (often permitted or prompts simply)
+    if (navigator.clipboard && typeof navigator.clipboard.readText === 'function') {
+      try {
+        const text = await navigator.clipboard.readText();
+        if (text && text.trim()) {
+          composerText.value = (composerText.value ? composerText.value + '\n' : '') + text;
+          composerText.focus();
+          showToast(t('toast_clip_pasted'), 'success');
+          return;
+        } else if (text !== undefined && text !== null && text === '') {
+          showToast(t('toast_clip_empty'), 'danger');
+          return;
+        }
+      } catch (textErr) {
+        console.warn('Clipboard readText() rejected/unsupported:', textErr);
+      }
+    }
+
+    // 3. Browser blocked permission or unsupported -> Open Quick Paste Dropzone modal
+    openQuickPasteModal();
   }
 
   // =============================================================
@@ -1780,6 +1823,96 @@
               showToast('Görsel yapıştırıldı!', 'success');
               break;
             }
+          }
+        }
+      }
+    }
+  });
+
+  // Quick Paste Modal Listeners
+  if (btnClosePasteModal) {
+    btnClosePasteModal.addEventListener('click', closeQuickPasteModal);
+  }
+  if (btnCancelPasteModal) {
+    btnCancelPasteModal.addEventListener('click', closeQuickPasteModal);
+  }
+  if (quickPasteModal) {
+    quickPasteModal.addEventListener('click', (e) => {
+      if (e.target === quickPasteModal) closeQuickPasteModal();
+    });
+  }
+
+  function handleDirectPasteData(clipboardData) {
+    if (!clipboardData) return false;
+    
+    // Check for image
+    const items = clipboardData.items;
+    if (items) {
+      for (const item of items) {
+        if (item.type.startsWith('image/')) {
+          const blob = item.getAsFile();
+          if (blob) {
+            handleImageFile(blob);
+            showToast(t('toast_img_pasted'), 'success');
+            closeQuickPasteModal();
+            return true;
+          }
+        }
+      }
+    }
+
+    // Check for text
+    const text = clipboardData.getData('text/plain');
+    if (text && text.trim()) {
+      composerText.value = (composerText.value ? composerText.value + '\n' : '') + text;
+      closeQuickPasteModal();
+      composerText.focus();
+      showToast(t('toast_clip_pasted'), 'success');
+      return true;
+    }
+
+    return false;
+  }
+
+  if (quickPasteZone) {
+    quickPasteZone.addEventListener('click', () => {
+      if (quickPasteInput) quickPasteInput.focus();
+    });
+    quickPasteZone.addEventListener('paste', (e) => {
+      if (handleDirectPasteData(e.clipboardData)) {
+        e.preventDefault();
+      }
+    });
+  }
+
+  if (quickPasteInput) {
+    quickPasteInput.addEventListener('paste', (e) => {
+      if (handleDirectPasteData(e.clipboardData)) {
+        e.preventDefault();
+      }
+    });
+    quickPasteInput.addEventListener('input', () => {
+      const val = quickPasteInput.value;
+      if (val && val.trim()) {
+        composerText.value = (composerText.value ? composerText.value + '\n' : '') + val.trim();
+        closeQuickPasteModal();
+        composerText.focus();
+        showToast(t('toast_clip_pasted'), 'success');
+      }
+    });
+  }
+
+  composerText.addEventListener('paste', (e) => {
+    const items = e.clipboardData?.items;
+    if (items) {
+      for (const item of items) {
+        if (item.type.startsWith('image/')) {
+          const blob = item.getAsFile();
+          if (blob) {
+            e.preventDefault();
+            handleImageFile(blob);
+            showToast(t('toast_img_pasted'), 'success');
+            break;
           }
         }
       }

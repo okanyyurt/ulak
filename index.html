@@ -168,35 +168,48 @@ html, body {
 .brand-badge {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--border-subtle);
-  padding: 6px 14px;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 8px 20px;
   border-radius: var(--radius-full);
   margin-bottom: 20px;
   backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.brand-badge:hover {
+  border-color: rgba(56, 189, 248, 0.4);
+  transform: translateY(-1px);
 }
 
 .brand-icon {
-  width: 24px;
-  height: 24px;
+  width: 42px;
+  height: 42px;
+  filter: drop-shadow(0 4px 12px rgba(6, 182, 212, 0.4));
+  flex-shrink: 0;
 }
 
 .brand-name {
-  font-weight: 700;
-  font-size: 15px;
-  letter-spacing: -0.02em;
+  font-weight: 800;
+  font-size: 24px;
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, #ffffff 0%, #38bdf8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .badge-tag {
   background: rgba(16, 185, 129, 0.15);
   color: var(--accent-emerald);
-  font-size: 11px;
-  font-weight: 600;
-  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
   border-radius: 6px;
   text-transform: uppercase;
   letter-spacing: 0.04em;
+  border: 1px solid rgba(16, 185, 129, 0.25);
 }
 
 .landing-title {
@@ -560,17 +573,31 @@ input[type="text"]::placeholder, textarea::placeholder {
 .room-brand {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   text-decoration: none;
   color: var(--text-main);
+  transition: opacity 0.15s ease, transform 0.15s ease;
 }
+
+.room-brand:hover {
+  opacity: 0.9;
+  transform: scale(1.02);
+}
+
 .brand-icon-sm {
-  width: 22px;
-  height: 22px;
+  width: 34px;
+  height: 34px;
+  filter: drop-shadow(0 2px 8px rgba(6, 182, 212, 0.35));
+  flex-shrink: 0;
 }
+
 .room-brand-text {
-  font-weight: 700;
-  font-size: 1rem;
+  font-weight: 800;
+  font-size: 1.35rem;
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, #ffffff 0%, #38bdf8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .room-id-pill {
@@ -1473,6 +1500,60 @@ input[type="text"]::placeholder, textarea::placeholder {
   border-radius: 4px;
 }
 
+/* Quick Paste Modal & Dropzone */
+.quick-paste-zone {
+  border: 2px dashed rgba(56, 189, 248, 0.4);
+  background: rgba(15, 23, 42, 0.6);
+  border-radius: var(--radius-md);
+  padding: 22px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  outline: none;
+  text-align: center;
+}
+
+.quick-paste-zone:hover,
+.quick-paste-zone:focus-within {
+  border-color: var(--accent-sky);
+  background: rgba(56, 189, 248, 0.08);
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
+}
+
+.quick-paste-icon {
+  font-size: 2.2rem;
+  margin-bottom: 8px;
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4));
+}
+
+.quick-paste-hint {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 12px;
+}
+
+.quick-paste-textarea {
+  width: 100%;
+  min-height: 80px;
+  max-height: 120px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-main);
+  padding: 10px 12px;
+  font-family: inherit;
+  font-size: 0.88rem;
+  resize: none;
+  outline: none;
+  transition: border-color 0.2s;
+  text-align: left;
+}
+
+.quick-paste-textarea:focus {
+  border-color: var(--accent-sky);
+}
+
 /* Destroyed Screen Overlay */
 .destroyed-overlay {
   position: fixed;
@@ -2057,6 +2138,8 @@ input[type="text"]::placeholder, textarea::placeholder {
           <a href="#" id="link-legal-terms" class="footer-link" data-i18n="footer_terms">Kullanım Şartları</a>
           <span class="footer-dot">•</span>
           <a href="#" id="link-legal-disclaimer" class="footer-link" data-i18n="footer_disclaimer">Sorumluluk Reddi</a>
+          <span class="footer-dot">•</span>
+          <a href="admin.html" class="footer-link" target="_blank" data-i18n="footer_admin">Yönetici</a>
         </div>
         <div class="footer-copy" data-i18n="footer_copy">
           Ulak — RAM üzerinde çalışan geçici ve anlık veri aktarım servisi. Sunucuda kalıcı log tutulmaz.
@@ -2251,6 +2334,8 @@ input[type="text"]::placeholder, textarea::placeholder {
           <a href="#" class="footer-link link-room-legal" id="link-room-legal-terms" data-i18n="footer_terms">Kullanım Şartları</a>
           <span class="footer-dot">•</span>
           <a href="#" class="footer-link link-room-legal" id="link-room-legal-disclaimer" data-i18n="footer_disclaimer">Sorumluluk Reddi</a>
+          <span class="footer-dot">•</span>
+          <a href="admin.html" class="footer-link" target="_blank" data-i18n="footer_admin">Yönetici</a>
         </div>
         <div class="footer-copy" data-i18n="footer_copy" style="font-size: 0.76rem; color: var(--text-dim);">
           Ulak — RAM üzerinde çalışan geçici ve anlık veri aktarım servisi. Sunucuda kalıcı log tutulmaz.
@@ -2369,6 +2454,32 @@ input[type="text"]::placeholder, textarea::placeholder {
         <div class="modal-buttons" style="display: flex; gap: 10px; margin-top: 18px;">
           <button type="button" class="btn btn-secondary" id="btn-cancel-device-rename" style="flex: 1;" data-i18n="btn_cancel">Vazgeç</button>
           <button type="button" class="btn btn-primary" id="btn-save-device-rename" style="flex: 1;" data-i18n="btn_save">Kaydet</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: QUICK PASTE DROPZONE -->
+    <div id="quick-paste-modal" class="modal-backdrop hidden">
+      <div class="modal-dialog modal-dialog-sm text-center">
+        <div class="modal-header">
+          <h3 class="modal-title" style="display: flex; align-items: center; gap: 8px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+            <span data-i18n="modal_paste_title">Panodan Yapıştır</span>
+          </h3>
+          <button type="button" class="btn-close-modal modal-close-btn" id="btn-close-paste-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p class="modal-desc" data-i18n-html="modal_paste_desc" style="margin-bottom: 14px; font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
+            Tarayıcı güvenlik kısıtlaması nedeniyle panoya doğrudan erişilemedi. Aşağıdaki kutucuğa tıklayıp <strong>Ctrl + V</strong> (Mac: <strong>Cmd + V</strong>) veya mobilde <strong>Yapıştır</strong> yapabilirsiniz:
+          </p>
+          <div id="quick-paste-zone" class="quick-paste-zone" tabindex="0">
+            <div class="quick-paste-icon">📋</div>
+            <div class="quick-paste-hint" data-i18n="modal_paste_zone_hint">Buraya tıklayın ve Ctrl+V yapın</div>
+            <textarea id="quick-paste-input" class="quick-paste-textarea" placeholder="Panodakini buraya yapıştırın (Metin veya Görsel)..." data-i18n-placeholder="modal_paste_placeholder"></textarea>
+          </div>
+        </div>
+        <div class="modal-buttons" style="margin-top: 16px;">
+          <button type="button" class="btn btn-secondary" id="btn-cancel-paste-modal" style="width: 100%;" data-i18n="btn_cancel">Vazgeç</button>
         </div>
       </div>
     </div>
