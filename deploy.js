@@ -44,7 +44,8 @@ async function deploy() {
     console.log(`📤 'public/' klasöründeki dosyalar yükleniyor...`);
 
     // Ensure remote directory exists and cd to it
-    await client.ensureDir(remoteDir);
+    const normalizedRemote = '/' + remoteDir.replace(/^\/+/, '');
+    await client.ensureDir(normalizedRemote);
 
     // Track uploads
     client.trackProgress(info => {
@@ -54,8 +55,8 @@ async function deploy() {
       }
     });
 
-    // Upload entire directory
-    await client.uploadFromDir(localDir, remoteDir);
+    // Upload entire directory into current remote directory
+    await client.uploadFromDir(localDir);
 
     console.log('\n');
     const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);

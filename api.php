@@ -362,8 +362,8 @@ if ($action === 'destroy_room') {
 // =============================================================
 // ADMIN CONTROLS & API ACTIONS (Protected)
 // =============================================================
-define('ADMIN_USER', getenv('ADMIN_USER') ?: 'admin');
-define('ADMIN_PASS', getenv('ADMIN_PASS') ?: 'admin');
+define('ADMIN_USER', 'admin');
+define('ADMIN_PASS', 'admin');
 
 function verifyAdminToken($storageDir) {
     $token = '';
@@ -376,6 +376,8 @@ function verifyAdminToken($storageDir) {
         $token = $headers['x-admin-token'];
     } elseif (!empty($_GET['admin_token'])) {
         $token = $_GET['admin_token'];
+    } elseif (!empty($_GET['token'])) {
+        $token = $_GET['token'];
     } elseif (!empty($_POST['admin_token'])) {
         $token = $_POST['admin_token'];
     }
@@ -405,8 +407,8 @@ function formatBytesPhp($bytes) {
 
 // ACTION: ADMIN LOGIN
 if ($action === 'admin_login') {
-    $user = $input['username'] ?? '';
-    $pass = $input['password'] ?? '';
+    $user = trim($input['username'] ?? ($_POST['username'] ?? ''));
+    $pass = trim($input['password'] ?? ($_POST['password'] ?? ''));
     if ($user === ADMIN_USER && $pass === ADMIN_PASS) {
         $token = bin2hex(random_bytes(24));
         $tokensFile = $storageDir . 'admin_tokens.json';
