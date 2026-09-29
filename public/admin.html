@@ -415,8 +415,9 @@
           </div>
           <button type="submit" id="btn-do-login" class="btn btn-primary btn-large btn-glow" style="margin-top: 10px;">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
-            <span>Yönetici Olarak Giriş Yap</span>
+            <span id="btn-login-text">Yönetici Olarak Giriş Yap</span>
           </button>
+          <div id="login-error-msg" style="color: #f87171; font-size: 0.88rem; margin-top: 12px; text-align: center; display: none;"></div>
         </form>
         <div style="margin-top: 18px; font-size: 0.78rem; color: var(--text-dim);">
           Varsayılan Giriş: <code>admin</code> / <code>admin</code>
@@ -575,7 +576,7 @@
 
       // Base path calculation
       const pathname = window.location.pathname;
-      const segments = pathname.replace(/^\\/+|\\/+$/g, '').split('/').filter(Boolean);
+      const segments = pathname.replace(/^\/+|\/+$/g, '').split('/').filter(Boolean);
       let basePath = '';
       if (segments.length >= 1 && (segments[0] === 'c' || segments[0] === 'chat')) {
         basePath = '/' + segments[0];
@@ -632,26 +633,42 @@
         }, 2600);
       }
 
+      let backendType = null; // 'node' or 'php'
+
       async function apiFetch(endpoint, options = {}) {
         options.headers = options.headers || {};
+        options.headers['Content-Type'] = 'application/json';
         if (adminToken) {
           options.headers['Authorization'] = `Bearer ${adminToken}`;
           options.headers['x-admin-token'] = adminToken;
         }
 
-        // Try Node.js API path first
-        let url = `${basePath}/api/admin/${endpoint}`;
-        try {
-          const res = await fetch(url, options);
-          if (res.status === 404) {
-            throw new Error('Fallback to PHP');
-          }
-          return res;
-        } catch (e) {
-          // Fallback to PHP backend (api.php)
-          const phpUrl = `${basePath}/api.php?action=admin_${endpoint}&admin_token=${encodeURIComponent(adminToken || '')}`;
-          return fetch(phpUrl, options);
+        const phpUrl = `${basePath}/api.php?action=admin_${endpoint}&admin_token=${encodeURIComponent(adminToken || '')}`;
+        const nodeUrl = `${basePath}/api/admin/${endpoint}?admin_token=${encodeURIComponent(adminToken || '')}`;
+
+        // If backend already detected, use it directly
+        if (backendType === 'php') {
+          return await fetch(phpUrl, options);
         }
+        if (backendType === 'node') {
+          return await fetch(nodeUrl, options);
+        }
+
+        // Auto-detect backend: try Node.js, verify JSON response
+        try {
+          const res = await fetch(nodeUrl, options);
+          const ctype = res.headers.get('content-type') || '';
+          if (ctype.includes('application/json')) {
+            backendType = 'node';
+            return res;
+          }
+        } catch (e) {
+          // Node not available
+        }
+
+        // Fallback to PHP (api.php)
+        backendType = 'php';
+        return await fetch(phpUrl, options);
       }
 
       async function checkAuthAndLoad() {
@@ -689,38 +706,72 @@
         setupAutoRefresh();
       }
 
-      loginForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
+      const btnDoLogin = document.getElementById('btn-do-login');
+      const btnLoginText = document.getElementById('btn-login-text');
+      const loginErrorMsg = document.getElementById('login-error-msg');
+
+      function showLoginError(msg) {
+        if (loginErrorMsg) {
+          loginErrorMsg.textContent = msg;
+          loginErrorMsg.style.display = 'block';
+        }
+      }
+
+      function hideLoginError() {
+        if (loginErrorMsg) {
+          loginErrorMsg.textContent = '';
+          loginErrorMsg.style.display = 'none';
+        }
+      }
+
+      async function handleLogin() {
         const username = inputUser.value.trim();
         const password = inputPass.value;
 
+        if (!username || !password) {
+          showLoginError('Lütfen kullanıcı adı ve şifre giriniz.');
+          return;
+        }
+
+        hideLoginError();
+        btnDoLogin.disabled = true;
+        if (btnLoginText) btnLoginText.textContent = 'Giriş Yapılıyor...';
+
         try {
-          let res = await fetch(`${basePath}/api/admin/login`, {
+          const res = await apiFetch('login', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password })
           });
-
-          if (res.status === 404) {
-            // PHP fallback
-            res = await fetch(`${basePath}/api.php?action=admin_login`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ username, password })
-            });
-          }
 
           const data = await res.json();
           if (res.ok && data.success) {
             adminToken = data.token;
             localStorage.setItem('ulak_admin_token', adminToken);
             showToast('Giriş başarılı!', 'success');
-            checkAuthAndLoad();
+            await checkAuthAndLoad();
           } else {
+            showLoginError(data.error || 'Kullanıcı adı veya şifre hatalı.');
             showToast(data.error || 'Giriş başarısız.', 'danger');
           }
         } catch (err) {
+          console.error('Login error:', err);
+          showLoginError('Sunucuya bağlanırken bir hata oluştu.');
           showToast('Giriş yapılırken sunucu hatası oluştu.', 'danger');
+        } finally {
+          btnDoLogin.disabled = false;
+          if (btnLoginText) btnLoginText.textContent = 'Yönetici Olarak Giriş Yap';
+        }
+      }
+
+      loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await handleLogin();
+      });
+
+      btnDoLogin.addEventListener('click', async (e) => {
+        if (e.target === btnDoLogin || btnDoLogin.contains(e.target)) {
+          e.preventDefault();
+          await handleLogin();
         }
       });
 
