@@ -22,14 +22,14 @@
 
 ## 🌐 Canlı Demo / Live Demo
 
-- **Demo Adresi:** [https://okanyesilyurt.com/c](https://okanyesilyurt.com/c)
+- **Demo Adresi:** [https://ulak.gryntech.net](https://ulak.gryntech.net)
 
 > [!WARNING]
 > **Kapasite ve Kaynak Uyarısı / Server Capacity Notice:**
-> `https://okanyesilyurt.com/c` adresi kişisel bir vitrin ve canlı demo ortamıdır; sunucu imkanları yüksek küresel trafiği ve büyük dosya aktarımlarını kaldıracak kapasitede değildir.
+> `https://ulak.gryntech.net` adresi kişisel bir vitrin ve canlı demo ortamıdır; sunucu imkanları yüksek küresel trafiği ve büyük dosya aktarımlarını kaldıracak kapasitede değildir.
 > Lütfen sistemi düzenli, kişisel veya kurumsal kullanımlarınız için **kendi paylaşımlı hostinginize (PHP ile 1 dakikada sıfır ayar), kendi VPS'inize (Docker) veya ofis/ev içi yerel Wi-Fi ağınıza** ücretsiz kurunuz.
 > 
-> *The instance at `https://okanyesilyurt.com/c` is a personal showcase/demo with limited server capacity. For regular or high-volume usage, please deploy your own free instance on your shared web host (cPanel/PHP), VPS (Docker), or local Wi-Fi network.*
+> *The instance at `https://ulak.gryntech.net` is a personal showcase/demo with limited server capacity. For regular or high-volume usage, please deploy your own free instance on your shared web host (cPanel/PHP), VPS (Docker), or local Wi-Fi network.*
 
 ---
 
@@ -231,11 +231,11 @@ location / {
 ## 🇬🇧 English Documentation
 
 ### 🌐 Live Showcase Demo & Capacity Warning
-- **Live Demo Instance:** [https://okanyesilyurt.com/c](https://okanyesilyurt.com/c)
+- **Live Demo Instance:** [https://ulak.gryntech.net](https://ulak.gryntech.net)
 
 > [!WARNING]
 > **Server Capacity & Usage Notice:**  
-> The instance at `https://okanyesilyurt.com/c` is a personal showcase/demo hosted on limited private server hardware. It is **not designed or sized to handle global public traffic or heavy file uploads**.  
+> The instance at `https://ulak.gryntech.net` is a personal showcase/demo hosted on limited private server hardware. It is **not designed or sized to handle global public traffic or heavy file uploads**.  
 > If you plan to use Ulak regularly for personal, team, or production workflows, please **self-host your own free instance**:
 > - **Shared Web Hosting (cPanel / Apache / LiteSpeed):** 1-minute zero-configuration setup using PHP (no Node.js required).
 > - **Local Wi-Fi Network (LAN):** 100% offline & local data exchange with no external servers.
