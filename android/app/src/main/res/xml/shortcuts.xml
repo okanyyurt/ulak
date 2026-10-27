@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Dynamic "recent channel" shortcuts with this category show up in the share sheet -->
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <share-target android:targetClass="net.gryntech.ulak.share.ShareActivity">
+        <data android:mimeType="text/plain" />
+        <data android:mimeType="image/*" />
+        <data android:mimeType="application/pdf" />
+        <data android:mimeType="application/msword" />
+        <data android:mimeType="application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+        <data android:mimeType="application/vnd.ms-excel" />
+        <data android:mimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+        <data android:mimeType="application/vnd.ms-powerpoint" />
+        <data android:mimeType="application/vnd.openxmlformats-officedocument.presentationml.presentation" />
+        <data android:mimeType="application/zip" />
+        <data android:mimeType="application/vnd.rar" />
+        <data android:mimeType="application/x-rar-compressed" />
+        <data android:mimeType="application/x-7z-compressed" />
+        <data android:mimeType="application/octet-stream" />
+        <category android:name="net.gryntech.ulak.category.CHANNEL_SHARE" />
+    </share-target>
+</shortcuts>

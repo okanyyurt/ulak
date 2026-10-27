@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Ulak</string>
+    <string name="channel_uploads">Gönderimler</string>
+    <string name="channel_uploads_desc">Kanallara gönderilen dosyaların ilerlemesi</string>
+    <string name="channel_results">Gönderim sonuçları</string>
+    <string name="channel_results_desc">Gönderim tamamlandığında veya hata olduğunda bildirir</string>
+</resources>

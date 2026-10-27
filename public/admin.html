@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+<script src="theme-init.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="robots" content="noindex, nofollow">
   <title>Ulak — Yönetici Paneli</title>
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+Old+Turkic&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <style>
     /* Admin Dashboard Specific Enhancements */
@@ -149,7 +151,7 @@
       position: relative;
     }
 
-    .search-input {
+    input.search-input {
       width: 100%;
       background: rgba(0, 0, 0, 0.35);
       border: 1px solid var(--border-subtle);
@@ -161,7 +163,7 @@
       transition: all 0.15s;
     }
 
-    .search-input:focus {
+    input.search-input:focus {
       outline: none;
       border-color: var(--accent-sky);
       background: rgba(0, 0, 0, 0.5);
@@ -323,7 +325,7 @@
       color: var(--text-muted);
     }
 
-    .login-input {
+    input.login-input {
       width: 100%;
       padding: 12px 14px;
       background: rgba(0, 0, 0, 0.35);
@@ -335,7 +337,7 @@
       transition: all 0.15s;
     }
 
-    .login-input:focus {
+    input.login-input:focus {
       outline: none;
       border-color: var(--accent-indigo);
       background: rgba(0, 0, 0, 0.5);
@@ -360,6 +362,191 @@
     .auto-refresh-pill input {
       cursor: pointer;
     }
+
+    /* File settings card */
+    .settings-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 20px 22px;
+      margin-bottom: 24px;
+      backdrop-filter: blur(20px);
+    }
+
+    .settings-card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .settings-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .settings-desc {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .settings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    .settings-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    input.settings-number {
+      width: 100%;
+      padding: 10px 12px;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      color: var(--text-main);
+      font-size: 0.95rem;
+      font-family: var(--font-mono);
+    }
+
+    .settings-groups {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .settings-group-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      background: rgba(0, 0, 0, 0.25);
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .settings-group-chip small {
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+      font-weight: 500;
+    }
+
+    /* Statistics */
+    .range-tabs {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      padding: 3px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+    }
+
+    .range-tabs button {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font: inherit;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 6px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .range-tabs button:hover { color: var(--text-main); background: rgba(255, 255, 255, 0.04); }
+    .range-tabs button.active { color: var(--text-main); background: rgba(255, 255, 255, 0.1); }
+
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .kpi-tile {
+      padding: 12px 14px;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    .kpi-label { font-size: 0.74rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+    .kpi-value { font-size: 1.5rem; font-weight: 800; font-family: var(--font-mono); color: var(--text-main); margin-top: 4px; }
+    .kpi-delta { font-size: 0.76rem; color: var(--text-dim); margin-top: 2px; }
+    .kpi-delta .up { color: #34d399; font-weight: 700; }
+    .kpi-delta .down { color: #f87171; font-weight: 700; }
+
+    .chart-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+
+    .chart-wrap { width: 100%; position: relative; }
+    .chart-wrap svg { display: block; width: 100%; }
+    .chart-wrap .bar { fill: #0284c7; }
+    .chart-wrap .bar-hit:hover + .bar,
+    .chart-wrap .bar-hit:focus + .bar { fill: #38bdf8; }
+    .chart-wrap .bar-hit { fill: transparent; cursor: default; outline: none; }
+    .chart-wrap .grid-line { stroke: rgba(255, 255, 255, 0.07); stroke-width: 1; }
+    .chart-wrap .axis-label { fill: var(--text-dim); font-size: 11px; font-family: var(--font-mono); }
+
+    .chart-tooltip {
+      position: fixed;
+      z-index: 50;
+      pointer-events: none;
+      background: #0b1220;
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 8px 10px;
+      box-shadow: var(--shadow-md);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .chart-tooltip strong { display: block; color: var(--text-main); font-size: 0.95rem; font-family: var(--font-mono); }
+
+    .stats-breakdown {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .breakdown-title { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; }
+
+    .breakdown-list {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 6px 14px;
+      font-size: 0.86rem;
+      margin: 0;
+    }
+
+    .breakdown-list dt { color: var(--text-muted); }
+    .breakdown-list dd { margin: 0; color: var(--text-main); font-family: var(--font-mono); font-weight: 700; text-align: right; }
+
+    .stats-table-details { margin-top: 18px; }
+    .stats-table-details summary { cursor: pointer; font-size: 0.86rem; font-weight: 700; color: var(--text-muted); }
+    .stats-table-details .admin-table td { font-family: var(--font-mono); font-size: 0.82rem; }
 
     .empty-admin-state {
       padding: 50px 20px;
@@ -407,11 +594,11 @@
         <form id="admin-login-form">
           <div class="form-group-login">
             <label for="login-username">Kullanıcı Adı</label>
-            <input type="text" id="login-username" class="login-input" value="admin" required autocomplete="username">
+            <input type="text" id="login-username" class="login-input" required autocomplete="username" autocapitalize="none" spellcheck="false">
           </div>
           <div class="form-group-login">
             <label for="login-password">Şifre</label>
-            <input type="password" id="login-password" class="login-input" value="admin" required autocomplete="current-password">
+            <input type="password" id="login-password" class="login-input" required autocomplete="current-password">
           </div>
           <button type="submit" id="btn-do-login" class="btn btn-primary btn-large btn-glow" style="margin-top: 10px;">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
@@ -419,9 +606,6 @@
           </button>
           <div id="login-error-msg" style="color: #f87171; font-size: 0.88rem; margin-top: 12px; text-align: center; display: none;"></div>
         </form>
-        <div style="margin-top: 18px; font-size: 0.78rem; color: var(--text-dim);">
-          Varsayılan Giriş: <code>admin</code> / <code>admin</code>
-        </div>
       </div>
     </div>
 
@@ -449,6 +633,11 @@
         </div>
 
         <div class="admin-top-actions">
+        <button type="button" class="theme-toggle-btn" id="admin-theme-toggle" title="Aydınlık / Karanlık Mod" style="margin-right: 6px;">
+          <span class="theme-toggle-icon" id="admin-theme-icon">☀️</span>
+          <span class="theme-toggle-text hide-mobile" id="admin-theme-text">Aydınlık</span>
+        </button>
+
           <label class="auto-refresh-pill">
             <input type="checkbox" id="chk-auto-refresh" checked>
             <span>Canlı Yenile (5s)</span>
@@ -461,6 +650,10 @@
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
             <span>Ana Sayfa</span>
           </a>
+          <button type="button" class="btn btn-sm btn-secondary" id="btn-open-password" title="Yönetici kullanıcı adı ve şifresini değiştir">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            <span>Şifre Değiştir</span>
+          </button>
           <button type="button" class="btn btn-sm btn-ghost" id="btn-logout" title="Yönetici oturumunu kapat">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
             <span>Çıkış Yap</span>
@@ -505,6 +698,150 @@
             <div class="stat-sub">Metin, kod ve fotoğraflar</div>
           </div>
         </div>
+      </section>
+
+      <!-- Daily Statistics -->
+      <section class="settings-card" id="stats-section">
+        <div class="settings-card-head">
+          <div>
+            <h3 class="settings-title">📈 İstatistikler</h3>
+            <p class="settings-desc">Gün gün arşivlenen ziyaret, oda ve trafik verileri. Ziyaretçiler anonim sayılır; aynı kişi günler arasında takip edilmez.</p>
+          </div>
+          <div class="range-tabs" id="stats-range" role="tablist" aria-label="Zaman aralığı">
+            <button type="button" data-days="7">7 gün</button>
+            <button type="button" data-days="30" class="active">30 gün</button>
+            <button type="button" data-days="90">90 gün</button>
+            <button type="button" data-days="365">1 yıl</button>
+          </div>
+        </div>
+
+        <div class="kpi-row" id="stats-kpis"></div>
+
+        <div class="chart-head">
+          <div class="range-tabs" id="stats-metric" role="tablist" aria-label="Grafik verisi">
+            <button type="button" data-metric="visitorCount" class="active">Tekil Ziyaretçi</button>
+            <button type="button" data-metric="pageViews">Sayfa Görüntüleme</button>
+            <button type="button" data-metric="roomsCreated">Açılan Oda</button>
+            <button type="button" data-metric="shares">Paylaşım</button>
+            <button type="button" data-metric="traffic">Trafik</button>
+          </div>
+          <span class="settings-desc" id="stats-tz"></span>
+        </div>
+        <div class="chart-wrap" id="stats-chart"></div>
+
+        <div class="stats-breakdown">
+          <div>
+            <div class="breakdown-title">Saatlere Göre Sayfa Görüntüleme</div>
+            <div class="chart-wrap chart-wrap-sm" id="stats-hours"></div>
+          </div>
+          <div>
+            <div class="breakdown-title">Dağılım (seçili dönem)</div>
+            <dl class="breakdown-list" id="stats-breakdown"></dl>
+          </div>
+        </div>
+
+        <details class="stats-table-details">
+          <summary>Günlük tablo</summary>
+          <div style="display: flex; justify-content: flex-end; margin: 10px 0;">
+            <button type="button" class="btn btn-sm btn-secondary" id="btn-stats-csv">CSV İndir</button>
+          </div>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Tarih</th><th>Tekil Ziyaretçi</th><th>Sayfa</th><th>Açılan Oda</th><th>Aktif Oda</th><th>Paylaşım</th><th>İndirme</th><th>Trafik</th>
+                </tr>
+              </thead>
+              <tbody id="stats-table-body"></tbody>
+            </table>
+          </div>
+        </details>
+        <div class="chart-tooltip hidden" id="stats-tooltip" role="status"></div>
+      </section>
+
+      <!-- Abuse Reports -->
+      <section class="settings-card" id="reports-section">
+        <div class="settings-card-head">
+          <div>
+            <h3 class="settings-title">🚩 Şikâyetler <span id="reports-open-count" class="badge-admin hidden"></span></h3>
+            <p class="settings-desc">Kullanıcıların odalardaki "Bildir" düğmesiyle gönderdiği bildirimler. Odaya bakıp gerekirse imha edin; bildirim 180 gün saklanır.</p>
+          </div>
+        </div>
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead><tr><th>Tarih</th><th>Oda</th><th>Sebep</th><th>Açıklama</th><th>Bildiren IP</th><th>Durum</th><th style="text-align: right;">İşlemler</th></tr></thead>
+            <tbody id="reports-table-body"></tbody>
+          </table>
+          <div id="reports-empty" class="empty-admin-state hidden">Henüz bildirim yok.</div>
+        </div>
+      </section>
+
+      <!-- Audit Log -->
+      <section class="settings-card" id="audit-section">
+        <div class="settings-card-head">
+          <div>
+            <h3 class="settings-title">🧾 Kayıtlar</h3>
+            <p class="settings-desc" id="audit-desc">Oda açma, paylaşım, dosya yükleme, bildirim ve imha işlemlerinin IP ve zaman kaydı. İçerik saklanmaz; yalnızca dosya özeti (SHA-256).</p>
+          </div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <select id="audit-date" class="search-input" style="width: auto; padding-left: 12px;"></select>
+            <input type="text" id="audit-search" class="search-input" style="width: 220px; padding-left: 12px;" placeholder="Oda, IP veya dosya adı...">
+            <button type="button" id="btn-audit-csv" class="btn btn-sm btn-secondary">CSV İndir</button>
+          </div>
+        </div>
+        <div class="admin-table-wrap" style="max-height: 420px; overflow-y: auto;">
+          <table class="admin-table">
+            <thead><tr><th>Saat</th><th>İşlem</th><th>Oda</th><th>IP</th><th>Ayrıntı</th></tr></thead>
+            <tbody id="audit-table-body"></tbody>
+          </table>
+          <div id="audit-empty" class="empty-admin-state hidden">Bu gün için kayıt yok.</div>
+        </div>
+      </section>
+
+      <!-- File Sharing Settings -->
+      <section class="settings-card">
+        <div class="settings-card-head">
+          <div>
+            <h3 class="settings-title">📁 Dosya Paylaşım Ayarları</h3>
+            <p class="settings-desc">Odalarda paylaşılabilecek dosya türleri ve boyut sınırları. Fotoğraflar her zaman paylaşılabilir; bu ayarlar PDF, Office ve arşiv dosyaları içindir.</p>
+          </div>
+          <span id="settings-disk-free" class="settings-desc"></span>
+        </div>
+        <form id="file-settings-form">
+          <div class="settings-grid">
+            <label class="settings-field">
+              <span>Dosya başına en büyük boyut (MB)</span>
+              <input type="number" id="set-max-file" class="settings-number" min="1" max="500" step="1" required>
+            </label>
+            <label class="settings-field">
+              <span>Oda başına toplam dosya kotası (MB)</span>
+              <input type="number" id="set-max-room" class="settings-number" min="1" max="2000" step="1" required>
+            </label>
+            <label class="settings-field">
+              <span>Sunucudaki toplam paylaşım alanı (MB)</span>
+              <input type="number" id="set-max-total" class="settings-number" min="1" max="102400" step="1" required>
+            </label>
+            <label class="settings-field">
+              <span>Kişi (IP) başına saatlik yükleme (MB)</span>
+              <input type="number" id="set-max-hourly" class="settings-number" min="1" max="10240" step="1" required>
+            </label>
+            <label class="settings-field">
+              <span>Dosya başına günlük indirme (0 = sınırsız)</span>
+              <input type="number" id="set-max-downloads" class="settings-number" min="0" max="100000" step="1" required>
+            </label>
+            <label class="settings-field">
+              <span>Kayıt (IP log) saklama süresi, gün (0 = kapalı)</span>
+              <input type="number" id="set-audit-days" class="settings-number" min="0" max="730" step="1" required>
+            </label>
+          </div>
+          <div class="settings-field" style="margin-top: 14px;">
+            <span>İzin verilen dosya türleri</span>
+            <div id="set-groups" class="settings-groups"></div>
+          </div>
+          <div style="display: flex; justify-content: flex-end; margin-top: 14px;">
+            <button type="submit" id="btn-save-settings" class="btn btn-sm btn-primary">Ayarları Kaydet</button>
+          </div>
+        </form>
       </section>
 
       <!-- Action Toolbar -->
@@ -568,521 +905,39 @@
     </div>
   </div>
 
+  <!-- Modal: Change Admin Password -->
+  <div id="admin-password-modal" class="modal-backdrop hidden">
+    <div class="modal-dialog modal-dialog-sm">
+      <h3 class="modal-title" style="margin-bottom: 8px;">🔐 Yönetici Şifresini Değiştir</h3>
+      <p class="modal-desc" id="password-modal-desc">Şifre yalnızca hash olarak saklanır. Değişiklikten sonra diğer tüm yönetici oturumları kapatılır.</p>
+      <form id="admin-password-form" autocomplete="off">
+        <div class="form-group-login">
+          <label for="pw-current">Mevcut Şifre</label>
+          <input type="password" id="pw-current" class="login-input" required autocomplete="current-password">
+        </div>
+        <div class="form-group-login">
+          <label for="pw-username">Kullanıcı Adı</label>
+          <input type="text" id="pw-username" class="login-input" required maxlength="64" autocomplete="username" autocapitalize="none" spellcheck="false">
+        </div>
+        <div class="form-group-login">
+          <label for="pw-new">Yeni Şifre</label>
+          <input type="password" id="pw-new" class="login-input" required maxlength="256" autocomplete="new-password">
+        </div>
+        <div class="form-group-login">
+          <label for="pw-new-repeat">Yeni Şifre (Tekrar)</label>
+          <input type="password" id="pw-new-repeat" class="login-input" required maxlength="256" autocomplete="new-password">
+        </div>
+        <div id="password-error-msg" style="color: #f87171; font-size: 0.86rem; margin-bottom: 10px; display: none;"></div>
+        <div class="modal-buttons" style="display: flex; gap: 10px; margin-top: 8px;">
+          <button type="button" class="btn btn-secondary" id="btn-password-cancel" style="flex: 1;">Vazgeç</button>
+          <button type="submit" class="btn btn-primary" id="btn-password-save" style="flex: 1;">Kaydet</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <div id="toast-container" class="toast-container"></div>
 
-  <script>
-    (function () {
-      'use strict';
-
-      // Base path calculation
-      const pathname = window.location.pathname;
-      const segments = pathname.replace(/^\/+|\/+$/g, '').split('/').filter(Boolean);
-      let basePath = '';
-      if (segments.length >= 1 && (segments[0] === 'c' || segments[0] === 'chat')) {
-        basePath = '/' + segments[0];
-      }
-      const baseUrl = window.location.origin + (basePath ? basePath + '/' : '/');
-
-      // State
-      let adminToken = localStorage.getItem('ulak_admin_token') || null;
-      let activeRooms = [];
-      let autoRefreshTimer = null;
-      let pendingDeleteAction = null;
-
-      // DOM Elements
-      const loginScreen = document.getElementById('admin-login-screen');
-      const dashboard = document.getElementById('admin-dashboard');
-      const loginForm = document.getElementById('admin-login-form');
-      const inputUser = document.getElementById('login-username');
-      const inputPass = document.getElementById('login-password');
-      const btnLogout = document.getElementById('btn-logout');
-      const btnRefresh = document.getElementById('btn-refresh');
-      const chkAutoRefresh = document.getElementById('chk-auto-refresh');
-      const searchInput = document.getElementById('search-rooms-input');
-      const chkSelectAll = document.getElementById('chk-select-all');
-      const btnBatchDelete = document.getElementById('btn-batch-delete');
-      const batchCountEl = document.getElementById('batch-count');
-      const selectedSummary = document.getElementById('selected-summary');
-      const btnPurgeAll = document.getElementById('btn-purge-all');
-      const tableBody = document.getElementById('rooms-table-body');
-      const emptyMsg = document.getElementById('empty-rooms-msg');
-
-      // Stats Elements
-      const statTotalRooms = document.getElementById('stat-total-rooms');
-      const statTotalSize = document.getElementById('stat-total-size');
-      const statTotalDevices = document.getElementById('stat-total-devices');
-      const statTotalItems = document.getElementById('stat-total-items');
-
-      // Modal Elements
-      const confirmModal = document.getElementById('admin-confirm-modal');
-      const modalTitle = document.getElementById('admin-modal-title');
-      const modalDesc = document.getElementById('admin-modal-desc');
-      const btnModalCancel = document.getElementById('btn-admin-modal-cancel');
-      const btnModalConfirm = document.getElementById('btn-admin-modal-confirm');
-      const toastContainer = document.getElementById('toast-container');
-
-      function showToast(message, type = 'normal') {
-        const toast = document.createElement('div');
-        toast.className = `toast ${type === 'danger' ? 'toast-danger' : type === 'success' ? 'toast-success' : ''}`;
-        toast.innerHTML = `<span>${message}</span>`;
-        toastContainer.appendChild(toast);
-        setTimeout(() => {
-          toast.style.opacity = '0';
-          toast.style.transform = 'translateY(10px)';
-          setTimeout(() => toast.remove(), 300);
-        }, 2600);
-      }
-
-      let backendType = null; // 'node' or 'php'
-
-      async function apiFetch(endpoint, options = {}) {
-        options.headers = options.headers || {};
-        options.headers['Content-Type'] = 'application/json';
-        if (adminToken) {
-          options.headers['Authorization'] = `Bearer ${adminToken}`;
-          options.headers['x-admin-token'] = adminToken;
-        }
-
-        const phpUrl = `${basePath}/api.php?action=admin_${endpoint}&admin_token=${encodeURIComponent(adminToken || '')}`;
-        const nodeUrl = `${basePath}/api/admin/${endpoint}?admin_token=${encodeURIComponent(adminToken || '')}`;
-
-        // If backend already detected, use it directly
-        if (backendType === 'php') {
-          return await fetch(phpUrl, options);
-        }
-        if (backendType === 'node') {
-          return await fetch(nodeUrl, options);
-        }
-
-        // Auto-detect backend: try Node.js, verify JSON response
-        try {
-          const res = await fetch(nodeUrl, options);
-          const ctype = res.headers.get('content-type') || '';
-          if (ctype.includes('application/json')) {
-            backendType = 'node';
-            return res;
-          }
-        } catch (e) {
-          // Node not available
-        }
-
-        // Fallback to PHP (api.php)
-        backendType = 'php';
-        return await fetch(phpUrl, options);
-      }
-
-      async function checkAuthAndLoad() {
-        if (!adminToken) {
-          showLogin();
-          return;
-        }
-
-        try {
-          const res = await apiFetch('rooms');
-          if (res.ok) {
-            const data = await res.json();
-            showDashboard();
-            renderDashboard(data);
-          } else {
-            adminToken = null;
-            localStorage.removeItem('ulak_admin_token');
-            showLogin();
-          }
-        } catch (err) {
-          console.error(err);
-          showToast('Sunucuya bağlanılamadı.', 'danger');
-        }
-      }
-
-      function showLogin() {
-        loginScreen.classList.remove('hidden');
-        dashboard.classList.add('hidden');
-        if (autoRefreshTimer) clearInterval(autoRefreshTimer);
-      }
-
-      function showDashboard() {
-        loginScreen.classList.add('hidden');
-        dashboard.classList.remove('hidden');
-        setupAutoRefresh();
-      }
-
-      const btnDoLogin = document.getElementById('btn-do-login');
-      const btnLoginText = document.getElementById('btn-login-text');
-      const loginErrorMsg = document.getElementById('login-error-msg');
-
-      function showLoginError(msg) {
-        if (loginErrorMsg) {
-          loginErrorMsg.textContent = msg;
-          loginErrorMsg.style.display = 'block';
-        }
-      }
-
-      function hideLoginError() {
-        if (loginErrorMsg) {
-          loginErrorMsg.textContent = '';
-          loginErrorMsg.style.display = 'none';
-        }
-      }
-
-      async function handleLogin() {
-        const username = inputUser.value.trim();
-        const password = inputPass.value;
-
-        if (!username || !password) {
-          showLoginError('Lütfen kullanıcı adı ve şifre giriniz.');
-          return;
-        }
-
-        hideLoginError();
-        btnDoLogin.disabled = true;
-        if (btnLoginText) btnLoginText.textContent = 'Giriş Yapılıyor...';
-
-        try {
-          const res = await apiFetch('login', {
-            method: 'POST',
-            body: JSON.stringify({ username, password })
-          });
-
-          const data = await res.json();
-          if (res.ok && data.success) {
-            adminToken = data.token;
-            localStorage.setItem('ulak_admin_token', adminToken);
-            showToast('Giriş başarılı!', 'success');
-            await checkAuthAndLoad();
-          } else {
-            showLoginError(data.error || 'Kullanıcı adı veya şifre hatalı.');
-            showToast(data.error || 'Giriş başarısız.', 'danger');
-          }
-        } catch (err) {
-          console.error('Login error:', err);
-          showLoginError('Sunucuya bağlanırken bir hata oluştu.');
-          showToast('Giriş yapılırken sunucu hatası oluştu.', 'danger');
-        } finally {
-          btnDoLogin.disabled = false;
-          if (btnLoginText) btnLoginText.textContent = 'Yönetici Olarak Giriş Yap';
-        }
-      }
-
-      loginForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        await handleLogin();
-      });
-
-      btnDoLogin.addEventListener('click', async (e) => {
-        if (e.target === btnDoLogin || btnDoLogin.contains(e.target)) {
-          e.preventDefault();
-          await handleLogin();
-        }
-      });
-
-      btnLogout.addEventListener('click', async () => {
-        try {
-          await apiFetch('logout', { method: 'POST' });
-        } catch (e) {}
-        adminToken = null;
-        localStorage.removeItem('ulak_admin_token');
-        showToast('Çıkış yapıldı.');
-        showLogin();
-      });
-
-      btnRefresh.addEventListener('click', async () => {
-        btnRefresh.disabled = true;
-        await refreshRooms();
-        btnRefresh.disabled = false;
-        showToast('Veriler güncellendi.');
-      });
-
-      async function refreshRooms() {
-        if (!adminToken) return;
-        try {
-          const res = await apiFetch('rooms');
-          if (res.ok) {
-            const data = await res.json();
-            renderDashboard(data);
-          } else if (res.status === 401) {
-            adminToken = null;
-            localStorage.removeItem('ulak_admin_token');
-            showLogin();
-          }
-        } catch (e) {}
-      }
-
-      function setupAutoRefresh() {
-        if (autoRefreshTimer) clearInterval(autoRefreshTimer);
-        if (chkAutoRefresh.checked) {
-          autoRefreshTimer = setInterval(refreshRooms, 5000);
-        }
-      }
-
-      chkAutoRefresh.addEventListener('change', setupAutoRefresh);
-
-      function formatTimeAgo(timestamp) {
-        if (!timestamp) return 'Bilinmiyor';
-        const sec = Math.floor((Date.now() - timestamp) / 1000);
-        if (sec < 60) return `${sec} sn önce`;
-        const min = Math.floor(sec / 60);
-        if (min < 60) return `${min} dk önce`;
-        const hours = Math.floor(min / 60);
-        return `${hours} saat önce`;
-      }
-
-      function formatTtlRemaining(room) {
-        if (room.ttlMode === 'burn_read' && !room.burnTriggeredAt) {
-          return '<span style="color: #fb923c; font-weight: 600;">🔥 Okunduğunda İmha</span>';
-        }
-        if (!room.expiresAt) return '<span class="text-muted">Süresiz</span>';
-
-        const diff = room.expiresAt - Date.now();
-        if (diff <= 0) {
-          return '<span style="color: var(--accent-rose); font-weight: 700;">⏳ Süresi Doldu</span>';
-        }
-        const min = Math.floor(diff / 60000);
-        const sec = Math.floor((diff % 60000) / 1000);
-        if (min < 2) {
-          return `<span style="color: var(--accent-rose); font-weight: 700;">⏱️ ${min}:${sec.toString().padStart(2, '0')} kaldı</span>`;
-        }
-        return `<span style="color: var(--accent-amber); font-weight: 600;">⏱️ ${min} dk kaldı</span>`;
-      }
-
-      function renderDashboard(data) {
-        const stats = data.stats || {};
-        activeRooms = data.rooms || [];
-
-        statTotalRooms.textContent = stats.totalRooms || activeRooms.length;
-        statTotalSize.textContent = stats.totalSizeFormatted || '0 B';
-        statTotalDevices.textContent = stats.totalDevices || 0;
-        statTotalItems.textContent = stats.totalItems || 0;
-
-        renderTable();
-      }
-
-      function renderTable() {
-        const filter = searchInput.value.toLowerCase().trim();
-        const filtered = activeRooms.filter(r => {
-          if (!filter) return true;
-          if (r.id.toLowerCase().includes(filter)) return true;
-          if (r.deviceNames && r.deviceNames.some(d => d.toLowerCase().includes(filter))) return true;
-          return false;
-        });
-
-        tableBody.innerHTML = '';
-        if (filtered.length === 0) {
-          emptyMsg.classList.remove('hidden');
-        } else {
-          emptyMsg.classList.add('hidden');
-        }
-
-        filtered.forEach(room => {
-          const tr = document.createElement('tr');
-          tr.setAttribute('data-room-id', room.id);
-
-          const roomUrl = `${baseUrl}${room.id}`;
-          const deviceNamesStr = (room.deviceNames && room.deviceNames.length > 0)
-            ? room.deviceNames.map(d => `<span class="dev-chip">${escapeHtml(d)}</span>`).join('')
-            : '<span class="text-dim" style="font-size: 0.8rem;">(Cihaz bağlı değil)</span>';
-
-          tr.innerHTML = `
-            <td style="text-align: center;">
-              <input type="checkbox" class="chk-room-select" value="${room.id}">
-            </td>
-            <td>
-              <a href="${roomUrl}" target="_blank" class="room-code-badge" title="Odayı yeni sekmede aç">
-                <span>${escapeHtml(room.id)}</span>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-              </a>
-            </td>
-            <td>
-              <div>${formatTtlRemaining(room)}</div>
-              <div style="font-size: 0.76rem; color: var(--text-dim); margin-top: 3px;">${formatTimeAgo(room.createdAt)}</div>
-            </td>
-            <td>
-              <div style="margin-bottom: 4px; font-weight: 700; font-size: 0.82rem; color: var(--accent-emerald);">
-                ${room.deviceCount} Cihaz
-              </div>
-              <div class="device-chips-cell">
-                ${deviceNamesStr}
-              </div>
-            </td>
-            <td>
-              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
-                <span class="size-pill">${room.sizeFormatted || '0 B'}</span>
-                <span style="font-size: 0.82rem; color: var(--text-muted);">${room.itemCount || 0} Öğe</span>
-              </div>
-              ${room.hasLivePad ? `<div style="font-size: 0.74rem; color: var(--accent-sky);">📝 LivePad: ${room.livePadLength} karakter</div>` : ''}
-            </td>
-            <td style="text-align: right; white-space: nowrap;">
-              <a href="${roomUrl}" target="_blank" class="btn btn-sm btn-outline" style="padding: 6px 10px; font-size: 0.8rem; margin-right: 6px;" title="Odaya Katıl">
-                👁️ Git
-              </a>
-              <button type="button" class="btn btn-sm btn-danger btn-delete-single" data-id="${room.id}" style="padding: 6px 10px; font-size: 0.8rem;" title="Oturumu Kapat ve Bellekten Sil">
-                🗑️ Sil
-              </button>
-            </td>
-          `;
-
-          tableBody.appendChild(tr);
-        });
-
-        bindTableEvents();
-        updateSelectedSummary();
-      }
-
-      function bindTableEvents() {
-        tableBody.querySelectorAll('.btn-delete-single').forEach(btn => {
-          btn.addEventListener('click', (e) => {
-            const roomId = btn.getAttribute('data-id');
-            askConfirmation(
-              `Oda (${roomId}) Kapatılsın mı?`,
-              `Bu oturumu kapattığınızda odadaki tüm metinler, kodlar ve görseller sunucudan kalıcı olarak silinecektir.`,
-              async () => {
-                await deleteSingleRoom(roomId);
-              }
-            );
-          });
-        });
-
-        tableBody.querySelectorAll('.chk-room-select').forEach(chk => {
-          chk.addEventListener('change', updateSelectedSummary);
-        });
-      }
-
-      function updateSelectedSummary() {
-        const checked = tableBody.querySelectorAll('.chk-room-select:checked');
-        const count = checked.length;
-        batchCountEl.textContent = count;
-        selectedSummary.textContent = `${count} oda seçili`;
-
-        if (count > 0) {
-          btnBatchDelete.style.display = 'inline-flex';
-        } else {
-          btnBatchDelete.style.display = 'none';
-        }
-      }
-
-      chkSelectAll.addEventListener('change', () => {
-        const isChecked = chkSelectAll.checked;
-        tableBody.querySelectorAll('.chk-room-select').forEach(chk => {
-          chk.checked = isChecked;
-        });
-        updateSelectedSummary();
-      });
-
-      searchInput.addEventListener('input', renderTable);
-
-      async function deleteSingleRoom(roomId) {
-        try {
-          const res = await apiFetch('destroy_room', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ roomId })
-          });
-          const data = await res.json();
-          if (res.ok && data.success) {
-            showToast(`Oda (${roomId}) başarıyla silindi.`, 'success');
-            await refreshRooms();
-          } else {
-            showToast(data.error || 'Silme işlemi başarısız.', 'danger');
-          }
-        } catch (err) {
-          showToast('İşlem sırasında hata oluştu.', 'danger');
-        }
-      }
-
-      btnBatchDelete.addEventListener('click', () => {
-        const checked = Array.from(tableBody.querySelectorAll('.chk-room-select:checked')).map(c => c.value);
-        if (checked.length === 0) return;
-
-        askConfirmation(
-          `Seçilen ${checked.length} Oda Silinsin mi?`,
-          `Seçtiğiniz ${checked.length} adet oturum kapatılacak ve içlerindeki tüm veriler bellekten tamamen silinecektir.`,
-          async () => {
-            try {
-              const res = await apiFetch('destroy_batch', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ roomIds: checked })
-              });
-              const data = await res.json();
-              if (res.ok && data.success) {
-                showToast(`${checked.length} adet oturum başarıyla silindi.`, 'success');
-                chkSelectAll.checked = false;
-                await refreshRooms();
-              } else {
-                showToast(data.error || 'Toplu silme başarısız.', 'danger');
-              }
-            } catch (err) {
-              showToast('İşlem sırasında hata oluştu.', 'danger');
-            }
-          }
-        );
-      });
-
-      btnPurgeAll.addEventListener('click', () => {
-        askConfirmation(
-          'TÜM Oturumlar Kapatılsın ve Temizlensin mi?',
-          'DİKKAT: Bu işlem sunucuda açık olan TÜM oturumları anında sonlandıracak ve belleği sıfırlayacaktır. Bu işlem geri alınamaz!',
-          async () => {
-            try {
-              const res = await apiFetch('destroy_all', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' }
-              });
-              const data = await res.json();
-              if (res.ok && data.success) {
-                showToast('Tüm oturumlar başarıyla temizlendi.', 'success');
-                chkSelectAll.checked = false;
-                await refreshRooms();
-              } else {
-                showToast(data.error || 'Temizleme başarısız.', 'danger');
-              }
-            } catch (err) {
-              showToast('İşlem sırasında hata oluştu.', 'danger');
-            }
-          }
-        );
-      });
-
-      function askConfirmation(title, desc, onConfirm) {
-        modalTitle.textContent = title;
-        modalDesc.textContent = desc;
-        pendingDeleteAction = onConfirm;
-        confirmModal.classList.remove('hidden');
-      }
-
-      btnModalCancel.addEventListener('click', () => {
-        confirmModal.classList.add('hidden');
-        pendingDeleteAction = null;
-      });
-
-      btnModalConfirm.addEventListener('click', async () => {
-        confirmModal.classList.add('hidden');
-        if (typeof pendingDeleteAction === 'function') {
-          const action = pendingDeleteAction;
-          pendingDeleteAction = null;
-          await action();
-        }
-      });
-
-      confirmModal.addEventListener('click', (e) => {
-        if (e.target === confirmModal) {
-          confirmModal.classList.add('hidden');
-          pendingDeleteAction = null;
-        }
-      });
-
-      function escapeHtml(str) {
-        if (!str) return '';
-        return String(str)
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;')
-          .replace(/'/g, '&#039;');
-      }
-
-      // Check on startup
-      checkAuthAndLoad();
-    })();
-  </script>
+  <script src="admin.js"></script>
 </body>
 </html>

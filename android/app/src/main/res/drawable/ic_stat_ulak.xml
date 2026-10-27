@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Status-bar icon: white sync arrows -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="64"
+    android:viewportHeight="64">
+    <path
+        android:pathData="M18,32C18,24.27 24.27,18 32,18C38.2,18 43.47,22.05 45.24,27.7M39,28.5L45.5,28.5L47,22M46,32C46,39.73 39.73,46 32,46C25.8,46 20.53,41.95 18.76,36.3M25,35.5L18.5,35.5L17,42"
+        android:strokeWidth="5"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M32,28a4,4 0,1 1,0 8a4,4 0,1 1,0 -8z" />
+</vector>

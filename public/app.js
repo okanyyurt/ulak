@@ -10,8 +10,9 @@
 
   // Application Base Path & URL calculation
   function getAppBase() {
-    if (typeof window.__APP_DIR__ === 'string') {
-      const folder = window.__APP_DIR__;
+    const htmlDir = document.documentElement.getAttribute('data-app-dir');
+    if (typeof htmlDir === 'string' || typeof window.__APP_DIR__ === 'string') {
+      const folder = typeof htmlDir === 'string' ? htmlDir : window.__APP_DIR__;
       return {
         path: folder,
         url: window.location.origin + (folder ? folder + '/' : '/')
@@ -90,13 +91,27 @@
       switch_btn: "EN 🇬🇧",
       switch_title: "Switch to English",
       badge_tag: "Hızlı & Geçici Pano",
+      theme_btn: "Aydınlık Mod",
+      theme_btn_light: "Aydınlık Mod",
+      theme_btn_dark: "Karanlık Mod",
+      theme_toggle_title: "Aydınlık / Karanlık Mod Değiştir",
+      theme_switched_light: "Aydınlık Mod Açıldı ☀️",
+      theme_switched_dark: "Karanlık Mod Açıldı 🌙",
       device_pill_title: "Cihaz adınızı değiştirmek için tıklayın",
       default_device_name: "Cihazım",
       landing_title_1: "Cihazlar Arasında",
       landing_title_2: "Işık Hızında",
       landing_title_3: "Paylaşın",
       landing_subtitle: "Üyelik yok, kayıt yok. Yazı, bağlantı ve fotoğrafları bilgisayarlarınız ve telefonunuz arasında anında eşitleyin.",
-      create_card_title: "Yeni Paylaşım Oturumu Başlat",
+      create_card_title: "Yeni Paylaşım Oturumu",
+      create_card_desc: "Geçici ve şifresiz bir pano açarak cihazlarınız arasında anında veri aktarın.",
+      join_card_title: "Var Olan Odaya Katıl",
+      join_card_desc: "Mevcut bir oturuma bağlanmak için 4 haneli kodu veya tam bağlantıyı girin.",
+      join_input_label: "Oda Kodu veya Link:",
+      join_hint_qr_title: "QR Kod ile Giriş",
+      join_hint_qr_desc: "Kamerayı diğer ekrandaki QR koda tutarak şifresiz ve anında bağlanabilirsiniz.",
+      join_hint_quick_title: "Kısa Link Desteği",
+      join_hint_quick_desc: "Tarayıcı adres çubuğuna doğrudan <code>${host}/xxxx</code> yazarak da oturuma girebilirsiniz.",
       ttl_hint: "Süre bitiminde tüm veriler bellekten silinir",
       ttl_opt_burn: "Okunur Okunmaz",
       ttl_opt_burn_desc: "Görüldükten 60sn sonra",
@@ -109,15 +124,16 @@
       ttl_opt_24h: "1 Gün",
       ttl_opt_24h_desc: "24 saat sakla",
       custom_room_label: "Özel Oda Adı (İsteğe Bağlı):",
-      custom_room_placeholder: "1a23, 123a (boş bırakırsanız 4 haneli kod verilir)",
+      custom_room_placeholder: "İstediğiniz Adı Yazın (veya boş bırakın)",
+      room_preview_note: "Bu odaya <code class=\"preview-url-badge\"><span class=\"preview-host\">${host}/</span><strong id=\"preview-custom-slug\" class=\"preview-slug\">xxxx</strong></code> olarak erişilebilecektir.",
       btn_create_room: "Hemen Oturumu Başlat",
       divider_or: "VEYA VAR OLAN BİR ODAYA GİRİN",
-      join_input_placeholder: "Oda Kodu (örn: 1a23, 123a) veya tam link...",
+      join_input_placeholder: "Oda kodu veya tam link...",
       btn_join: "Katıl",
       feat_1_title: "Sıfır Disk İzi",
       feat_1_desc: "Hiçbir veri sunucu diskine yazılmaz. Yalnızca geçici RAM'de tutulur, süre dolunca buharlaşır.",
       feat_2_title: "Kısa Link & QR Kod",
-      feat_2_desc: "Kamerayı QR koda tutun veya <code>/chat/a123</code> gibi kısa linkle anında aynı odaya bağlanın.",
+      feat_2_desc: "Kamerayı QR koda tutun veya <code>${host}/xxxx</code> gibi kısa linkle anında aynı odaya bağlanın.",
       feat_3_title: "Gerçek Zamanlı Eşzamanlama",
       feat_3_desc: "Bir cihazdan eklenen metin, link veya fotoğraf diğer cihazlara anında yansır.",
       security_banner_text: "<strong>Önemli Yasal Bildirim:</strong> Ulak geçici ve deneysel bir anlık aktarım aracıdır. Uçtan uca mutlak gizlilik garanti edilmez. Şifre, kredi kartı veya özel/gizli bilgilerinizi kesinlikle paylaşmayınız. İllegal içerik paylaşımı kesinlikle yasaktır; tüm hukuki ve cezai sorumluluk kullanıcıya aittir.",
@@ -137,6 +153,7 @@
       composer_placeholder: "Yazı, link veya kod yapıştırın ya da yazın... (Ctrl+Enter ile gönder, Ctrl+V ile resim yapıştır)",
       btn_paste: "Panodan Yapıştır",
       btn_upload: "Fotoğraf Ekle",
+      btn_upload_file: "Dosya Ekle",
       btn_send: "Gönder",
       composer_security_tip: "Önemli: Şifre, kredi kartı veya hassas kişisel bilgi paylaşmayınız. <a href=\"#\" id=\"link-composer-legal\">Yasal Uyarı & Gizlilik</a>",
       clips_section_title: "Paylaşılan Pano Öğeleri",
@@ -204,6 +221,12 @@
       switch_btn: "TR 🇹🇷",
       switch_title: "Türkçe'ye Geç",
       badge_tag: "Fast & Ephemeral Clipboard",
+      theme_btn: "Light Mode",
+      theme_btn_light: "Light Mode",
+      theme_btn_dark: "Dark Mode",
+      theme_toggle_title: "Toggle Light / Dark Mode",
+      theme_switched_light: "Switched to Light Mode ☀️",
+      theme_switched_dark: "Switched to Dark Mode 🌙",
       device_pill_title: "Click to rename this device",
       default_device_name: "My Device",
       landing_title_1: "Share Across Devices",
@@ -211,6 +234,14 @@
       landing_title_3: "",
       landing_subtitle: "No sign-up, no login. Instant sync for text, links, code, and photos between your computers and phones.",
       create_card_title: "Start a New Sharing Room",
+      create_card_desc: "Open a temporary, passwordless room to transfer data instantly between devices.",
+      join_card_title: "Join Existing Room",
+      join_card_desc: "Enter a 4-character code or full link to connect to an ongoing session.",
+      join_input_label: "Room Code or Link:",
+      join_hint_qr_title: "Instant QR Code Join",
+      join_hint_qr_desc: "Scan the QR code displayed on the other screen with your camera to join directly.",
+      join_hint_quick_title: "Direct URL Support",
+      join_hint_quick_desc: "You can also type <code>${host}/xxxx</code> directly into your browser address bar.",
       ttl_hint: "All data will be permanently wiped when the timer expires",
       ttl_opt_burn: "Burn on Read",
       ttl_opt_burn_desc: "60s after viewed",
@@ -223,15 +254,16 @@
       ttl_opt_24h: "1 Day",
       ttl_opt_24h_desc: "Keep for 24 hours",
       custom_room_label: "Custom Room Name (Optional):",
-      custom_room_placeholder: "1a23, 123a (leave empty for an auto 4-char code)",
+      custom_room_placeholder: "Type your custom name (or leave empty)",
+      room_preview_note: "This room will be accessible at <code class=\"preview-url-badge\"><span class=\"preview-host\">${host}/</span><strong id=\"preview-custom-slug\" class=\"preview-slug\">xxxx</strong></code>.",
       btn_create_room: "Start Room & Generate QR",
       divider_or: "OR JOIN AN EXISTING ROOM",
-      join_input_placeholder: "Room Code (e.g. 1a23, 123a) or full link...",
+      join_input_placeholder: "Room code or full link...",
       btn_join: "Join Room",
       feat_1_title: "Zero Disk Trace",
       feat_1_desc: "No data is written to server disk or database. Held strictly in temporary RAM and vaporized when expired.",
       feat_2_title: "Short Link & QR Code",
-      feat_2_desc: "Scan the QR code with your phone camera or use a quick 4-character link to join the same room instantly.",
+      feat_2_desc: "Scan the QR code with your camera or use a quick <code>${host}/xxxx</code> link to join the same room instantly.",
       feat_3_title: "Real-Time Sync",
       feat_3_desc: "Text, links, and photos added from one device appear on other connected screens in milliseconds.",
       security_banner_text: "<strong>Important Legal Notice:</strong> Ulak is a temporary, ephemeral data transfer tool. End-to-end encryption is not guaranteed. Do not share passwords, credit cards, or confidential private data. Illegal content is strictly forbidden; all legal liability rests solely with the user.",
@@ -251,6 +283,7 @@
       composer_placeholder: "Type or paste text, links, or code... (Ctrl+Enter to send, Ctrl+V to paste image)",
       btn_paste: "Paste Clipboard",
       btn_upload: "Add Photo",
+      btn_upload_file: "Add File",
       btn_send: "Send",
       composer_security_tip: "Important: Never share passwords, credit cards, or sensitive data. <a href=\"#\" id=\"link-composer-legal\">Legal Notice & Privacy</a>",
       clips_section_title: "Shared Clipboard Items",
@@ -356,6 +389,16 @@
       <p>
         Servis herhangi bir kesintisizlik, veri kurtarma veya doğruluk garantisi olmaksızın "olduğu gibi" sunulmaktadır. Süresi dolan veya imha edilen veriler kalıcı olarak yok edilir; silinen içeriklerin geri getirilmesi teknik olarak imkansızdır. Olası veri kayıplarından sistem sorumlu değildir.
       </p>
+
+      <h4 style="color: var(--text-main); margin: 16px 0 6px; font-size: 1rem; display: flex; align-items: center; gap: 6px;">
+        <span>5.</span> Kayıtlar ve Kötüye Kullanım Bildirimi
+      </h4>
+      <p>
+        Kötüye kullanımı önlemek ve yasal taleplere yanıt verebilmek için oda açma, paylaşım ve dosya yükleme işlemlerinde <strong>IP adresi, zaman, oda kodu ve dosyanın özeti (SHA-256)</strong> yönetici tarafından belirlenen süre boyunca (varsayılan 90 gün) kaydedilir. Paylaşılan içeriğin kendisi bu kayıtlarda tutulmaz.
+      </p>
+      <p>
+        Uygunsuz veya yasa dışı bir içerik görürseniz odadaki <strong>"Bildir"</strong> düğmesini kullanın. Bildirilen odalar incelenip kapatılabilir; yetkili makamlardan talep gelmesi halinde kayıtlar mevzuata uygun şekilde paylaşılır.
+      </p>
     `,
     en: `
       <div class="legal-section-callout" style="background: rgba(239, 68, 68, 0.1); border-left: 3px solid #ef4444; padding: 12px 14px; border-radius: 4px; margin-bottom: 16px; color: #fca5a5;">
@@ -398,6 +441,16 @@
       <p>
         The service is provided strictly "as-is" without warranty of continuous availability, reliability, or recovery. Once expired or destroyed, all data is purged permanently from RAM with zero possibility of restoration.
       </p>
+
+      <h4 style="color: var(--text-main); margin: 16px 0 6px; font-size: 1rem; display: flex; align-items: center; gap: 6px;">
+        <span>5.</span> Logs & Abuse Reports
+      </h4>
+      <p>
+        To prevent abuse and to answer lawful requests, creating rooms, sharing and uploading files are logged with the <strong>IP address, time, room code and a file fingerprint (SHA-256)</strong> for a period set by the administrator (90 days by default). The shared content itself is not kept in these logs.
+      </p>
+      <p>
+        If you see inappropriate or illegal content, use the <strong>"Report"</strong> button in the room. Reported rooms may be reviewed and closed; logs are disclosed to competent authorities only as required by law.
+      </p>
     `
   };
 
@@ -435,12 +488,14 @@
     });
 
     // 2. HTML Content
+    const currentDisplayHost = (window.location.host + BASE_PATH).replace(/\/$/, '') || 'ulak.chat';
     document.querySelectorAll('[data-i18n-html]').forEach(el => {
       const key = el.getAttribute('data-i18n-html');
       if (dict[key] !== undefined) {
-        el.innerHTML = dict[key];
+        el.innerHTML = dict[key].replace(/\$\{host\}/g, currentDisplayHost);
       }
     });
+    updateCustomSlugPreview();
 
     // 3. Placeholders
     document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
@@ -495,9 +550,90 @@
   function toggleLanguage() {
     const nextLang = currentLang === 'tr' ? 'en' : 'tr';
     applyLanguage(nextLang);
+    
+    // Update Theme Toggle Buttons labels
+    const isLightNow = currentTheme === 'light';
+    const themeTextKey = isLightNow ? 'theme_btn_dark' : 'theme_btn_light';
+    const landingThemeText = document.getElementById('landing-theme-text');
+    if (landingThemeText) landingThemeText.textContent = dict[themeTextKey] || (isLightNow ? 'Karanlık Mod' : 'Aydınlık Mod');
+    const themeSwitchTitle = dict.theme_toggle_title || 'Aydınlık / Karanlık Mod Değiştir';
+    const landingThemeToggleEl = document.getElementById('landing-theme-toggle');
+    const roomThemeToggleEl = document.getElementById('room-theme-toggle');
+    if (landingThemeToggleEl) landingThemeToggleEl.title = themeSwitchTitle;
+    if (roomThemeToggleEl) roomThemeToggleEl.title = themeSwitchTitle;
+
     showToast(nextLang === 'en' ? 'Language switched to English 🇬🇧' : 'Dil Türkçe olarak ayarlandı 🇹🇷');
   }
 
+
+
+  // =============================================================
+  // THEME SYSTEM (Auto System Detection + Reactive OS sync + Manual Persistence)
+  // =============================================================
+  function getSystemTheme() {
+    return (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+  }
+
+  function getInitialTheme() {
+    try {
+      const saved = localStorage.getItem('ulak_theme');
+      if (saved === 'light' || saved === 'dark') return saved;
+    } catch (e) {}
+    return getSystemTheme();
+  }
+
+  let currentTheme = getInitialTheme();
+
+  function applyTheme(theme, saveToStorage = true) {
+    currentTheme = theme;
+    if (saveToStorage) {
+      try { localStorage.setItem('ulak_theme', theme); } catch (e) {}
+    }
+    document.documentElement.setAttribute('data-theme', theme);
+
+    const isLight = theme === 'light';
+    const icon = isLight ? '🌙' : '☀️';
+    const textKey = isLight ? 'theme_btn_dark' : 'theme_btn_light';
+    const label = t(textKey, isLight ? 'Karanlık Mod' : 'Aydınlık Mod');
+    const switchTitle = t('theme_toggle_title', 'Aydınlık / Karanlık Mod Değiştir');
+
+    const landingIcon = document.getElementById('landing-theme-icon');
+    const landingText = document.getElementById('landing-theme-text');
+    const landingToggle = document.getElementById('landing-theme-toggle');
+    const roomIcon = document.getElementById('room-theme-icon');
+    const roomToggle = document.getElementById('room-theme-toggle');
+
+    if (landingIcon) landingIcon.textContent = icon;
+    if (landingText) landingText.textContent = label;
+    if (landingToggle) landingToggle.title = switchTitle;
+    if (roomIcon) roomIcon.textContent = icon;
+    if (roomToggle) roomToggle.title = switchTitle;
+  }
+
+  function toggleTheme() {
+    const nextTheme = currentTheme === 'light' ? 'dark' : 'light';
+    applyTheme(nextTheme, true);
+    const toastMsg = nextTheme === 'light'
+      ? t('theme_switched_light', 'Aydınlık Mod Açıldı ☀️')
+      : t('theme_switched_dark', 'Karanlık Mod Açıldı 🌙');
+    showToast(toastMsg);
+  }
+
+  // Early theme initialization (respects saved preference or follows system)
+  applyTheme(currentTheme, false);
+
+  // Listen to OS system theme changes dynamically if user hasn't set an explicit manual preference
+  if (window.matchMedia) {
+    try {
+      window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', e => {
+        try {
+          if (!localStorage.getItem('ulak_theme')) {
+            applyTheme(e.matches ? 'light' : 'dark', false);
+          }
+        } catch (err) {}
+      });
+    } catch (e) {}
+  }
 
   // State
   let currentRoomId = null;
@@ -608,6 +744,11 @@
   const roomLangToggle = document.getElementById('room-lang-toggle');
   if (landingLangToggle) landingLangToggle.addEventListener('click', toggleLanguage);
   if (roomLangToggle) roomLangToggle.addEventListener('click', toggleLanguage);
+  const landingThemeToggle = document.getElementById('landing-theme-toggle');
+  const roomThemeToggle = document.getElementById('room-theme-toggle');
+  if (landingThemeToggle) landingThemeToggle.addEventListener('click', toggleTheme);
+  if (roomThemeToggle) roomThemeToggle.addEventListener('click', toggleTheme);
+
     
   // Livepad Overlay & Neon Highlights Elements
   const livepadBackdrop = document.getElementById('livepad-backdrop');
@@ -622,6 +763,41 @@
   if (roomPrefixLabel) {
     roomPrefixLabel.textContent = `${window.location.host}${BASE_PATH}/`;
   }
+
+  // Live Room Slug Preview in Landing View
+  const displayHostStr = (window.location.host + BASE_PATH).replace(/\/$/, '') || 'ulak.chat';
+  document.querySelectorAll('.preview-host').forEach(el => {
+    el.textContent = `${displayHostStr}/`;
+  });
+  document.querySelectorAll('.dynamic-domain-xxxx').forEach(el => {
+    el.textContent = `${displayHostStr}/xxxx`;
+  });
+
+  function updateCustomSlugPreview() {
+    const slugEl = document.getElementById('preview-custom-slug');
+    const hostEl = document.querySelector('.preview-host');
+    const curHost = (window.location.host + BASE_PATH).replace(/\/$/, '') || 'ulak.chat';
+    if (hostEl) {
+      hostEl.textContent = `${curHost}/`;
+    }
+    if (!slugEl) return;
+    const inputEl = document.getElementById('custom-room-input');
+    const rawVal = inputEl ? inputEl.value.trim() : '';
+    if (rawVal) {
+      const cleanSlug = rawVal.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9_\-]/g, '').toLowerCase() || rawVal;
+      slugEl.textContent = cleanSlug;
+      slugEl.classList.add('custom-active');
+    } else {
+      slugEl.textContent = 'xxxx';
+      slugEl.classList.remove('custom-active');
+    }
+  }
+
+  if (customRoomInput) {
+    customRoomInput.addEventListener('input', updateCustomSlugPreview);
+    customRoomInput.addEventListener('keyup', updateCustomSlugPreview);
+  }
+
 
   function getDeviceName() {
     const isMobile = /Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -724,7 +900,7 @@
     }
 
     const html = chunks.map(chunk => {
-      const colorId = chunk.color || 'cyan';
+      const colorId = safeColorId(chunk.color);
       const cleanText = escapeHtml(chunk.t);
       return `<span class="neon-chunk neon-chunk-${colorId}" title="Yazan: ${escapeHtml(chunk.name || 'Cihaz')}">${cleanText}</span>`;
     }).join('');
@@ -760,7 +936,7 @@
       const isMe = a.dev === myDeviceId;
       const extraClass = isMe ? ' device-pill my-device-chip' : '';
       const extraTitle = isMe ? ' title="Cihaz adınızı değiştirmek için tıklayın"' : '';
-      return `<span class="legend-chip chip-${a.color}${extraClass}"${extraTitle} style="${isMe ? 'cursor: pointer;' : ''}">● ${escapeHtml(a.name)}${isMe ? ' ✏️' : ''}</span>`;
+      return `<span class="legend-chip chip-${safeColorId(a.color)}${extraClass}"${extraTitle} style="${isMe ? 'cursor: pointer;' : ''}">● ${escapeHtml(a.name)}${isMe ? ' ✏️' : ''}</span>`;
     }).join('');
   }
 
@@ -798,12 +974,22 @@
   }
 
   function escapeHtml(str) {
-    return (str || '')
+    return String(str || '')
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#039;');
+  }
+
+  // Shared items come from other devices: only render real base64 image data URLs
+  function isSafeImageDataUrl(value) {
+    return typeof value === 'string' && /^data:image\/(png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$/.test(value);
+  }
+
+  // Color ids are interpolated into CSS class names
+  function safeColorId(value) {
+    return DEVICE_COLORS.some(c => c.id === value) ? value : 'cyan';
   }
 
   const LANG_HEADER_REGEX = /^\s*(?:(?:Copy(?:\s+code)?|Kopyala)\s+)?(bash|shell|sh|zsh|terminal|powershell|ps1|cmd|command\s+prompt|python|py|javascript|js|typescript|ts|html|css|json|sql|php|c|cpp|c\+\+|c#|csharp|go|golang|rust|ruby|swift|kotlin|yaml|yml|xml|dockerfile|makefile)\s*$/i;
@@ -1083,8 +1269,9 @@
     toast.className = `toast ${type === 'danger' ? 'toast-danger' : type === 'success' ? 'toast-success' : ''}`;
     toast.innerHTML = `
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-      <span>${message}</span>
+      <span></span>
     `;
+    toast.querySelector('span').textContent = message;
     toastContainer.appendChild(toast);
 
     setTimeout(() => {
@@ -1271,11 +1458,333 @@
   }
 
   // =============================================================
+  // FILE SHARING (PDF, OFFICE, ARCHIVES) — CHUNKED UPLOAD
+  // =============================================================
+
+  let fileSettings = null;
+  let fileBackend = null; // 'node' or 'php'
+  let uploadQueue = Promise.resolve();
+
+  const FILE_ICONS = {
+    pdf: '📕', doc: '📘', docx: '📘', odt: '📘', rtf: '📘',
+    xls: '📗', xlsx: '📗', ods: '📗', csv: '📗',
+    ppt: '📙', pptx: '📙', odp: '📙',
+    zip: '🗜️', rar: '🗜️', '7z': '🗜️', txt: '📄'
+  };
+
+  function fileApiUrl(action, params = {}) {
+    const qs = new URLSearchParams(params).toString();
+    if (fileBackend === 'node') {
+      const routes = { settings: 'settings', init: 'files/init', chunk: 'files/chunk', complete: 'files/complete' };
+      return `${BASE_PATH}/api/${routes[action]}${qs ? '?' + qs : ''}`;
+    }
+    const actions = { settings: 'get_settings', init: 'upload_init', chunk: 'upload_chunk', complete: 'upload_complete' };
+    return `${BASE_PATH}/api.php?action=${actions[action]}${qs ? '&' + qs : ''}`;
+  }
+
+  function fileDownloadUrl(item) {
+    if (fileBackend === 'node') {
+      return `${BASE_PATH}/api/files/${encodeURIComponent(currentRoomId)}/${encodeURIComponent(item.fileId)}`;
+    }
+    return `${BASE_PATH}/api.php?action=get_file&room=${encodeURIComponent(currentRoomId)}&id=${encodeURIComponent(item.fileId)}`;
+  }
+
+  async function loadFileSettings() {
+    // Node serves JSON at /api/settings; on PHP hosts that path falls through to index.php (HTML)
+    try {
+      const res = await fetch(`${BASE_PATH}/api/settings`, { cache: 'no-store' });
+      if ((res.headers.get('content-type') || '').includes('application/json')) {
+        fileBackend = 'node';
+        fileSettings = (await res.json()).files;
+      }
+    } catch (e) {}
+
+    if (fileBackend !== 'node') {
+      fileBackend = 'php';
+      try {
+        const res = await fetch(fileApiUrl('settings'), { cache: 'no-store' });
+        if (res.ok) fileSettings = (await res.json()).files;
+      } catch (e) {}
+    }
+
+    const fileLabel = document.getElementById('file-upload-label');
+    const fileInput = document.getElementById('file-upload-input');
+    if (fileLabel) fileLabel.classList.toggle('hidden', !(fileSettings && fileSettings.enabled));
+    if (fileInput && fileSettings) {
+      fileInput.accept = fileSettings.allowedExtensions.map(e => '.' + e).join(',');
+    }
+  }
+
+  function setUploadStatus(text, percent) {
+    let bar = document.getElementById('composer-upload-status');
+    if (text === null) {
+      if (bar) bar.remove();
+      return;
+    }
+    if (!bar) {
+      bar = document.createElement('div');
+      bar.id = 'composer-upload-status';
+      bar.className = 'upload-status';
+      bar.innerHTML = '<span class="upload-status-text"></span><div class="upload-status-track"><div class="upload-status-fill"></div></div>';
+      document.querySelector('.composer-body').appendChild(bar);
+    }
+    bar.querySelector('.upload-status-text').textContent = text;
+    bar.querySelector('.upload-status-fill').style.width = `${Math.max(0, Math.min(100, percent))}%`;
+  }
+
+  async function postJson(url, body) {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.success) throw new Error(data.error || 'Sunucu hatası.');
+    return data;
+  }
+
+  // Routes any dropped/selected/pasted file: images keep the compressed inline flow
+  function handleAnyFile(file) {
+    if (!file) return;
+    if (file.type.startsWith('image/')) {
+      handleImageFile(file);
+      return;
+    }
+    uploadQueue = uploadQueue.then(() => uploadGenericFile(file));
+  }
+
+  async function uploadGenericFile(file) {
+    if (!fileSettings) await loadFileSettings();
+    if (!fileSettings || !fileSettings.enabled) {
+      showToast('Dosya paylaşımı yönetici tarafından kapatılmış.', 'danger');
+      return;
+    }
+
+    const ext = file.name.includes('.') ? file.name.split('.').pop().toLowerCase() : '';
+    if (!fileSettings.allowedExtensions.includes(ext)) {
+      showToast(`Bu dosya türü desteklenmiyor. İzin verilenler: ${fileSettings.allowedExtensions.join(', ')}`, 'danger');
+      return;
+    }
+    if (file.size === 0) {
+      showToast('Boş dosya gönderilemez.', 'danger');
+      return;
+    }
+    if (file.size > fileSettings.maxFileSizeBytes) {
+      showToast(`Dosya çok büyük (${formatBytes(file.size)}). En fazla ${fileSettings.maxFileSizeMB} MB yüklenebilir.`, 'danger');
+      return;
+    }
+
+    setUploadStatus(`⏫ ${file.name} yükleniyor... %0`, 0);
+    try {
+      const init = await postJson(fileApiUrl('init'), {
+        roomId: currentRoomId,
+        fileName: file.name,
+        fileSize: file.size,
+        fileType: file.type
+      });
+
+      const chunkSize = init.chunkSize || fileSettings.chunkSize;
+      for (let offset = 0; offset < file.size; offset += chunkSize) {
+        const res = await fetch(fileApiUrl('chunk', { uploadId: init.uploadId, offset }), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/octet-stream' },
+          body: file.slice(offset, offset + chunkSize)
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.success) throw new Error(data.error || 'Yükleme yarıda kesildi.');
+        const percent = Math.round((data.received / file.size) * 100);
+        setUploadStatus(`⏫ ${file.name} yükleniyor... %${percent}`, percent);
+      }
+
+      const done = await postJson(fileApiUrl('complete', { uploadId: init.uploadId }), {
+        senderName: myDeviceName,
+        senderDeviceId: myDeviceId
+      });
+      // Node broadcasts item_added over the socket; PHP clients see it on the next poll
+      if (fileBackend === 'php' && done.item) addClipToDom(done.item, true);
+      showToast(`${file.name} paylaşıldı.`, 'success');
+    } catch (err) {
+      showToast(err.message || 'Dosya yüklenemedi.', 'danger');
+    } finally {
+      setUploadStatus(null);
+    }
+  }
+
+  // =============================================================
+  // ROOM OWNERSHIP, TERMS OF USE & ABUSE REPORTS
+  // =============================================================
+
+  const OWNER_TOKENS_KEY = 'ulak_owner_tokens';
+  const TERMS_KEY = 'ulak_terms_v1';
+  let roomOwnerProtected = false;
+
+  // The device that created a room keeps its owner token; only it may destroy the room
+  function readOwnerTokens() {
+    try {
+      const all = JSON.parse(localStorage.getItem(OWNER_TOKENS_KEY) || '{}');
+      const cutoff = Date.now() - 48 * 3600 * 1000; // rooms live at most 24 h
+      Object.keys(all).forEach(k => { if (!all[k] || all[k].t < cutoff) delete all[k]; });
+      return all;
+    } catch (e) {
+      return {};
+    }
+  }
+
+  function saveOwnerToken(roomId, token) {
+    if (!token) return;
+    const all = readOwnerTokens();
+    all[roomId] = { token, t: Date.now() };
+    try { localStorage.setItem(OWNER_TOKENS_KEY, JSON.stringify(all)); } catch (e) {}
+  }
+
+  function getOwnerToken(roomId) {
+    const entry = readOwnerTokens()[roomId];
+    return entry ? entry.token : '';
+  }
+
+  function setRoomOwnerProtected(value) {
+    roomOwnerProtected = Boolean(value);
+    const canDestroy = !roomOwnerProtected || Boolean(getOwnerToken(currentRoomId));
+    btnPromptDestroy.classList.toggle('hidden', !canDestroy);
+  }
+
+  function hasAcceptedTerms() {
+    try { return localStorage.getItem(TERMS_KEY) === 'yes'; } catch (e) { return false; }
+  }
+
+  function buildModal(innerHtml) {
+    const modal = document.createElement('div');
+    modal.className = 'modal-backdrop';
+    modal.innerHTML = `<div class="modal-dialog modal-dialog-md">${innerHtml}</div>`;
+    document.body.appendChild(modal);
+    return modal;
+  }
+
+  /** Shows the terms once per browser; resolves to true when accepted. */
+  function ensureTermsAccepted() {
+    if (hasAcceptedTerms()) return Promise.resolve(true);
+    const en = currentLang === 'en';
+    return new Promise(resolve => {
+      const modal = buildModal(`
+        <div class="modal-header">
+          <h3 class="modal-title">${en ? '📜 Terms of Use' : '📜 Kullanım Koşulları'}</h3>
+        </div>
+        <div class="modal-body" style="font-size: 0.9rem; line-height: 1.6; color: var(--text-muted);">
+          <p>${en
+            ? 'Sharing illegal content on Ulak is <strong>prohibited</strong>: child abuse material, malware, phishing, pirated content, other people\'s personal data, threats or harassment.'
+            : 'Ulak üzerinden yasa dışı içerik paylaşmak <strong>yasaktır</strong>: çocuk istismarı içeren materyal, zararlı yazılım, oltalama, korsan içerik, başkasına ait kişisel veriler, tehdit veya taciz.'}</p>
+          <p>${en
+            ? 'To prevent abuse, room creation, shares and uploads are logged with <strong>IP address, time and a file fingerprint</strong> for a limited period. Content itself is not kept in these logs.'
+            : 'Kötüye kullanımı önlemek için oda açma, paylaşım ve yüklemelerde <strong>IP adresi, zaman ve dosya özeti</strong> sınırlı bir süre kaydedilir. İçeriğin kendisi bu kayıtlarda tutulmaz.'}</p>
+          <p>${en
+            ? 'Use the <strong>Report</strong> button in a room to flag inappropriate content.'
+            : 'Uygunsuz bir içerik görürseniz odadaki <strong>Bildir</strong> düğmesini kullanın.'}
+            <a href="#" class="terms-legal-link" style="color: var(--accent-sky, #38bdf8); text-decoration: underline;">${en ? 'Full legal notice' : 'Yasal uyarının tamamı'}</a></p>
+          <label style="display: flex; gap: 10px; align-items: flex-start; margin-top: 14px; color: var(--text-main); cursor: pointer;">
+            <input type="checkbox" class="terms-check" style="margin-top: 4px;">
+            <span>${en ? 'I have read the terms and will not share illegal content.' : 'Koşulları okudum, yasa dışı içerik paylaşmayacağım.'}</span>
+          </label>
+        </div>
+        <div class="modal-buttons" style="display: flex; gap: 10px; margin-top: 16px;">
+          <button type="button" class="btn btn-secondary terms-cancel" style="flex: 1;">${en ? 'Cancel' : 'Vazgeç'}</button>
+          <button type="button" class="btn btn-primary terms-accept" style="flex: 1;" disabled>${en ? 'Accept' : 'Kabul Ediyorum'}</button>
+        </div>
+      `);
+      const check = modal.querySelector('.terms-check');
+      const accept = modal.querySelector('.terms-accept');
+      check.addEventListener('change', () => { accept.disabled = !check.checked; });
+      modal.querySelector('.terms-legal-link').addEventListener('click', (e) => {
+        e.preventDefault();
+        openLegalNoticeModal();
+      });
+      const close = (ok) => {
+        if (ok) {
+          try { localStorage.setItem(TERMS_KEY, 'yes'); } catch (e) {}
+        }
+        modal.remove();
+        resolve(ok);
+      };
+      accept.addEventListener('click', () => close(true));
+      modal.querySelector('.terms-cancel').addEventListener('click', () => close(false));
+    });
+  }
+
+  const REPORT_REASONS = [
+    ['illegal', 'Yasa dışı içerik', 'Illegal content'],
+    ['malware', 'Zararlı yazılım / oltalama', 'Malware / phishing'],
+    ['harassment', 'Taciz / tehdit', 'Harassment / threats'],
+    ['copyright', 'Telif hakkı ihlali', 'Copyright infringement'],
+    ['other', 'Diğer', 'Other']
+  ];
+
+  function openReportModal() {
+    const en = currentLang === 'en';
+    const modal = buildModal(`
+      <div class="modal-header">
+        <h3 class="modal-title">${en ? '🚩 Report this room' : '🚩 Bu odayı bildir'}</h3>
+      </div>
+      <div class="modal-body" style="font-size: 0.9rem; color: var(--text-muted);">
+        <p style="margin-bottom: 12px;">${en
+          ? 'The administrator will review the room and may close it. Your report is anonymous to other users.'
+          : 'Yönetici odayı inceleyip kapatabilir. Bildiriminizi odadaki diğer kişiler görmez.'}</p>
+        <label style="display: block; margin-bottom: 6px; color: var(--text-main);">${en ? 'Reason' : 'Sebep'}</label>
+        <select class="report-reason" style="width: 100%; padding: 10px; border-radius: 8px; background: rgba(0,0,0,0.3); color: var(--text-main); border: 1px solid var(--border-subtle);">
+          ${REPORT_REASONS.map(([value, tr, enLabel]) => `<option value="${value}">${en ? enLabel : tr}</option>`).join('')}
+        </select>
+        <label style="display: block; margin: 12px 0 6px; color: var(--text-main);">${en ? 'Details (optional)' : 'Açıklama (isteğe bağlı)'}</label>
+        <textarea class="report-details" maxlength="500" rows="3" style="width: 100%; padding: 10px; border-radius: 8px; background: rgba(0,0,0,0.3); color: var(--text-main); border: 1px solid var(--border-subtle);"></textarea>
+      </div>
+      <div class="modal-buttons" style="display: flex; gap: 10px; margin-top: 16px;">
+        <button type="button" class="btn btn-secondary report-cancel" style="flex: 1;">${en ? 'Cancel' : 'Vazgeç'}</button>
+        <button type="button" class="btn btn-danger report-send" style="flex: 1;">${en ? 'Send report' : 'Bildir'}</button>
+      </div>
+    `);
+    modal.querySelector('.report-cancel').addEventListener('click', () => modal.remove());
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+    const sendBtn = modal.querySelector('.report-send');
+    sendBtn.addEventListener('click', async () => {
+      sendBtn.disabled = true;
+      try {
+        if (!fileBackend) await loadFileSettings();
+        const url = fileBackend === 'node' ? `${BASE_PATH}/api/report` : `${BASE_PATH}/api.php?action=report`;
+        const data = await postJson(url, {
+          roomId: currentRoomId,
+          reason: modal.querySelector('.report-reason').value,
+          details: modal.querySelector('.report-details').value
+        });
+        showToast(data.message || 'Bildiriminiz iletildi.', 'success');
+        modal.remove();
+      } catch (err) {
+        showToast(err.message || 'Bildirim gönderilemedi.', 'danger');
+        sendBtn.disabled = false;
+      }
+    });
+  }
+
+  function ensureReportButton() {
+    if (document.getElementById('btn-report-room') || !btnPromptDestroy) return;
+    const btn = document.createElement('button');
+    btn.id = 'btn-report-room';
+    btn.type = 'button';
+    btn.className = 'btn btn-sm btn-ghost';
+    btn.title = currentLang === 'en' ? 'Report abuse' : 'Kötüye kullanımı bildir';
+    btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg><span class="hide-mobile">${currentLang === 'en' ? 'Report' : 'Bildir'}</span>`;
+    btn.addEventListener('click', openReportModal);
+    btnPromptDestroy.parentNode.insertBefore(btn, btnPromptDestroy);
+  }
+
+  // =============================================================
   // UNIVERSAL SYNC ENGINE (PHP POLLING & NODE SOCKET.IO)
   // =============================================================
 
   function joinRoom(roomId) {
+    if (!hasAcceptedTerms()) {
+      ensureTermsAccepted().then(ok => { if (ok) joinRoom(roomId); });
+      return;
+    }
+    ensureReportButton();
     currentRoomId = roomId;
+    loadFileSettings();
     window.history.replaceState({}, '', `${BASE_PATH}/${roomId}`);
 
     currentRoomNameEl.textContent = roomId;
@@ -1311,7 +1820,8 @@
 
     socket.emit('join_room', {
       roomId,
-      deviceName: myDeviceName
+      deviceName: myDeviceName,
+      deviceId: myDeviceId
     });
   }
 
@@ -1330,7 +1840,12 @@
       setTimeout(() => { window.location.href = BASE_URL; }, 2000);
     });
 
+    socket.on('item_error', (data) => {
+      showToast(data.message || 'Paylaşım gönderilemedi.', 'danger');
+    });
+
     socket.on('room_joined', (data) => {
+      setRoomOwnerProtected(data.ownerProtected);
       currentTtlMode = data.ttlMode;
       roomExpiresAt = data.expiresAt;
       startTtlCountdown();
@@ -1423,6 +1938,7 @@
         if (!res.ok) return;
 
         const data = await res.json();
+        setRoomOwnerProtected(data.ownerProtected);
         currentTtlMode = data.ttlMode;
         roomExpiresAt = data.expiresAt;
         startTtlCountdown();
@@ -1537,13 +2053,29 @@
     const senderColor = isMine ? myDeviceColor : getDeviceColor(item.senderDeviceId || item.senderName);
 
     const isImage = item.type === 'image';
-    const firstUrl = !isImage ? extractFirstUrl(item.content) : null;
+    const isFile = item.type === 'file';
+    const hasSafeImage = isImage && isSafeImageDataUrl(item.content);
+    const firstUrl = !isImage && !isFile ? extractFirstUrl(item.content) : null;
+    const fileExt = isFile ? String(item.fileExt || '').toLowerCase() : '';
 
     let contentHtml = '';
-    if (isImage) {
+    if (isFile) {
       contentHtml = `
-        <div class="clip-image-wrapper" data-img="${item.content}" data-name="${item.fileName || 'gorsel.jpg'}">
-          <img src="${item.content}" alt="Paylaşılan Fotoğraf" loading="lazy">
+        <div class="clip-file">
+          <span class="clip-file-icon">${FILE_ICONS[fileExt] || '📎'}</span>
+          <div class="clip-file-meta">
+            <span class="clip-file-name">${escapeHtml(item.fileName || 'dosya')}</span>
+            <span class="clip-file-type">${escapeHtml(fileExt.toUpperCase())} · ${escapeHtml(formatBytes(Number(item.fileSize) || 0))}</span>
+          </div>
+        </div>
+      `;
+    } else if (isImage && !hasSafeImage) {
+      contentHtml = `<div class="clip-body">⚠️ Geçersiz görsel verisi engellendi.</div>`;
+    } else if (isImage) {
+      // src is assigned below via the DOM, never interpolated into HTML
+      contentHtml = `
+        <div class="clip-image-wrapper">
+          <img alt="Paylaşılan Fotoğraf" loading="lazy">
         </div>
       `;
     } else {
@@ -1570,10 +2102,15 @@
             </span>
           </span>
           <span>${formatTime(item.createdAt)}</span>
-          ${item.fileSize ? `<span>• ${formatBytes(item.fileSize)}</span>` : ''}
+          ${Number(item.fileSize) > 0 ? `<span>• ${escapeHtml(formatBytes(Number(item.fileSize)))}</span>` : ''}
         </div>
         <div class="clip-actions">
-          ${!isImage ? `
+          ${isFile ? `
+            <a class="btn btn-sm btn-outline btn-download-file" title="Dosyayı İndir">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              <span>${t('btn_download_img', 'İndir')}</span>
+            </a>
+          ` : !isImage ? `
             <button class="btn btn-sm btn-outline btn-copy-clip" title="${t('btn_copy_clip', 'Metni Kopyala')}">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
               <span>${t('btn_copy_clip', 'Kopyala')}</span>
@@ -1591,6 +2128,16 @@
       </div>
       ${contentHtml}
     `;
+
+    if (hasSafeImage) {
+      card.querySelector('.clip-image-wrapper img').src = item.content;
+    }
+
+    const btnDownloadFile = card.querySelector('.btn-download-file');
+    if (btnDownloadFile && /^[a-f0-9]{32}$/.test(item.fileId || '')) {
+      btnDownloadFile.href = fileDownloadUrl(item);
+      btnDownloadFile.setAttribute('download', item.fileName || 'dosya');
+    }
 
     const btnCopy = card.querySelector('.btn-copy-clip');
     if (btnCopy) {
@@ -1630,7 +2177,7 @@
     });
 
     const btnDownload = card.querySelector('.btn-download-clip');
-    if (btnDownload) {
+    if (btnDownload && hasSafeImage) {
       btnDownload.addEventListener('click', () => {
         const a = document.createElement('a');
         a.href = item.content;
@@ -1819,10 +2366,11 @@
         correctLevel: QRCode.CorrectLevel.M
       });
     } else {
-      const img = document.createElement('img');
-      img.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(url)}`;
-      img.alt = 'QR Kod';
-      qrCanvasHolder.appendChild(img);
+      // No third-party QR service: it would leak the private room link
+      const fallback = document.createElement('div');
+      fallback.style.cssText = 'padding: 16px; font-size: 0.85rem; word-break: break-all; color: #0f172a; background: #fff; border-radius: 8px;';
+      fallback.textContent = url;
+      qrCanvasHolder.appendChild(fallback);
     }
   }
 
@@ -1853,6 +2401,7 @@
   });
 
   btnCreateRoom.addEventListener('click', async () => {
+    if (!(await ensureTermsAccepted())) return;
     const customId = customRoomInput.value.trim();
     try {
       btnCreateRoom.disabled = true;
@@ -1865,9 +2414,10 @@
         const res = await fetch(`${BASE_PATH}/api/rooms`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ customId, ttlMode: currentTtlMode })
+          body: JSON.stringify({ customId, ttlMode: currentTtlMode, acceptTerms: true })
         });
-        if (res.ok) data = await res.json();
+        const ctype = res.headers.get('content-type') || '';
+        if (ctype.includes('application/json')) data = await res.json();
       } catch (err) {}
 
       if (!data) {
@@ -1875,15 +2425,16 @@
         const res = await fetch(`${BASE_PATH}/api.php?action=create_room`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ customId, ttlMode: currentTtlMode })
+          body: JSON.stringify({ customId, ttlMode: currentTtlMode, acceptTerms: true })
         });
         data = await res.json();
       }
 
       if (data && data.success) {
+        saveOwnerToken(data.roomId, data.ownerToken);
         joinRoom(data.roomId);
       } else {
-        showToast('Oda oluşturulamadı.', 'danger');
+        showToast((data && data.error) || 'Oda oluşturulamadı.', 'danger');
       }
     } catch (err) {
       showToast('Bağlantı hatası.', 'danger');
@@ -1964,14 +2515,20 @@
   });
   btnConfirmDestroy.addEventListener('click', async () => {
     destroyConfirmModal.classList.add('hidden');
+    const ownerToken = getOwnerToken(currentRoomId);
     if (engineType === 'socket' && socket) {
-      socket.emit('destroy_room_now');
+      socket.emit('destroy_room_now', { ownerToken });
     } else {
-      await fetch(getApiUrl('action=destroy_room'), {
+      const res = await fetch(getApiUrl('action=destroy_room'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ roomId: currentRoomId })
+        body: JSON.stringify({ roomId: currentRoomId, ownerToken })
       });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        showToast(data.error || 'Oda imha edilemedi.', 'danger');
+        return;
+      }
       onRoomDestroyed('Oturum kullanıcı tarafından anında imha edildi.');
     }
   });
@@ -2003,6 +2560,36 @@
     }
   });
 
+  const fileUploadInput = document.getElementById('file-upload-input');
+  if (fileUploadInput) {
+    fileUploadInput.addEventListener('change', (e) => {
+      Array.from(e.target.files || []).forEach(handleAnyFile);
+      fileUploadInput.value = '';
+    });
+  }
+
+  // Drag & drop files anywhere on the composer card
+  const composerCard = document.querySelector('.composer-card');
+  if (composerCard) {
+    composerCard.addEventListener('dragover', (e) => {
+      if (e.dataTransfer && Array.from(e.dataTransfer.types || []).includes('Files')) {
+        e.preventDefault();
+        composerCard.classList.add('drag-over');
+      }
+    });
+    composerCard.addEventListener('dragleave', (e) => {
+      if (!composerCard.contains(e.relatedTarget)) composerCard.classList.remove('drag-over');
+    });
+    composerCard.addEventListener('drop', (e) => {
+      composerCard.classList.remove('drag-over');
+      const files = Array.from((e.dataTransfer && e.dataTransfer.files) || []);
+      if (files.length) {
+        e.preventDefault();
+        files.forEach(handleAnyFile);
+      }
+    });
+  }
+
   btnCancelPreview.addEventListener('click', clearPendingImage);
   btnSendClip.addEventListener('click', sendCurrentClip);
 
@@ -2023,6 +2610,12 @@
             if (blob) {
               handleImageFile(blob);
               showToast('Görsel yapıştırıldı!', 'success');
+              break;
+            }
+          } else if (item.kind === 'file') {
+            const pastedFile = item.getAsFile();
+            if (pastedFile) {
+              handleAnyFile(pastedFile);
               break;
             }
           }
@@ -2488,8 +3081,23 @@
     return null;
   }
 
+  // Anonymous page view for the admin's daily statistics (no personal data is sent)
+  async function trackVisit() {
+    if (!fileBackend) await loadFileSettings();
+    const url = fileBackend === 'node' ? `${BASE_PATH}/api/track` : `${BASE_PATH}/api.php?action=track`;
+    try {
+      await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ visitorId: myDeviceId }),
+        keepalive: true
+      });
+    } catch (e) {}
+  }
+
   async function init() {
     updateDeviceHeaderBadge();
+    trackVisit();
     await fetchSystemInfo();
 
     const detectedRoom = detectRoomFromUrl();

@@ -32,11 +32,16 @@ async function deploy() {
 
   try {
     console.log('⏳ FTP sunucusuna bağlanılıyor...');
+    // Explicit FTPS by default so credentials and files are not sent in plain text.
+    // Set FTP_SECURE=false in .env only if the host has no TLS support.
+    const secure = process.env.FTP_SECURE !== 'false';
+    if (!secure) console.warn('⚠️  FTP_SECURE=false: bağlantı şifrelenmeden yapılıyor!');
     await client.access({
       host,
       user,
       password,
-      secure: false
+      secure,
+      secureOptions: { servername: host }
     });
     console.log('✅ Bağlantı başarılı!');
 
@@ -67,6 +72,9 @@ async function deploy() {
     console.log('====================================================');
   } catch (err) {
     console.error('\n❌ FTP Dağıtım Hatası:', err.message || err);
+    if (/tls|ssl|certificate|AUTH/i.test(String(err.message || err))) {
+      console.error('ℹ️  Sunucu FTPS desteklemiyor veya sertifika uyumsuz olabilir. Sertifikadaki host adını FTP_HOST olarak kullanmayı deneyin.');
+    }
     process.exit(1);
   } finally {
     client.close();

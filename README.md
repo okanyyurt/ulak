@@ -92,6 +92,11 @@ Odayı açın (veya 4 karakterli kısa kodla katılın), QR kodu okutun ve verin
 - **Varsayılan Giriş Bilgileri:**
   - **Kullanıcı Adı:** `admin`
   - **Şifre:** `admin`
+- **İlk Kurulum:** Kurulumdan hemen sonra panele `admin` / `admin` ile giriş yapın; panel açılmadan önce kendi şifrenizi belirlemeniz istenir (uzunluk/karmaşıklık kuralı yoktur). Yeni şifre `data/admin_config.php` (PHP) veya `data/admin_config.json` (Node) içinde yalnızca hash olarak saklanır.
+- **Şifre Değiştirme:** Panel üst menüsündeki **Şifre Değiştir** butonu (kullanıcı adı da değiştirilebilir). Değişiklik sonrası diğer tüm yönetici oturumları kapatılır.
+- **Şifreyi Unutursanız:** Sunucudaki `data/admin_config.php` dosyasını silin; giriş tekrar `admin` / `admin` olur.
+- **Koruma:** 5 hatalı denemede 15 dk kilit, 8 saatlik oturum, token yalnızca HTTP başlığında taşınır.
+- **Node.js için:** `ADMIN_USER` / `ADMIN_PASS` ortam değişkenleri, kayıtlı ayar yoksa başlangıç bilgisi olarak kullanılır.
 - **Yönetim Özellikleri:**
   - Aktif tüm oturumları ve bağlı cihazları canlı listeleme.
   - Oturumların ve genel sistemin **kapladığı toplam RAM / bellek boyutunu** (B, KB, MB) görüntüleme.
@@ -99,6 +104,17 @@ Odayı açın (veya 4 karakterli kısa kodla katılın), QR kodu okutun ve verin
   - Çoklu seçim ile **toplu silme** (Batch Delete) veya tek tıkla tüm oturumları sıfırlama (Purge All).
   - Canlı otomatik yenileme (Auto-Refresh) ve hızlı oda arama/filtreleme.
   - Hem Node.js hem de PHP motorlarında sıfır konfigürasyonla tam uyumlu çalışma.
+  - **📈 İstatistikler:** Gün gün arşivlenen tekil ziyaretçi, sayfa görüntüleme, açılan/aktif oda, paylaşım (metin/fotoğraf/dosya), indirme ve trafik. 7/30/90/365 gün aralıkları, önceki döneme göre değişim yüzdesi, saatlik dağılım, mobil/masaüstü oranı, günlük tablo ve CSV dışa aktarma. Veriler `data/stats/YYYY-AA-GG.json` dosyalarında tutulur (400 gün). Ziyaretçiler gün bazlı tuzlanmış hash ile anonim sayılır; geçmiş günlerde yalnızca sayılar saklanır.
+  - **🚩 Şikâyetler:** Kullanıcıların odalardaki "Bildir" düğmesiyle gönderdiği bildirimler; odaya bakma, imha etme, çözüldü işaretleme.
+  - **🧾 Kayıtlar:** Oda açma, paylaşım, dosya yükleme, bildirim ve imha işlemlerinin IP + zaman + dosya özeti (SHA-256) kaydı; içerik saklanmaz. Saklama süresi ayarlanabilir (varsayılan 90 gün, 0 = kapalı); arama ve CSV dışa aktarma.
+  - **🛡️ Sınırlar:** Sunucu geneli toplam paylaşım alanı, kişi başı saatlik yükleme hacmi ve dosya başına günlük indirme sayısı panelden ayarlanır. ZIP/RAR/7Z varsayılan olarak kapalıdır.
+  - **📁 Dosya Paylaşım Ayarları:** Dosya başına en büyük boyut (1–500 MB), oda başına toplam kota ve izin verilen dosya türleri (PDF, Word, Excel, PowerPoint, ZIP/RAR/7Z, TXT) panelden ayarlanır.
+
+### 📎 Dosya Paylaşımı (PDF, Office, Arşiv)
+- Desteklenen türler: `pdf`, `doc/docx/odt/rtf`, `xls/xlsx/ods/csv`, `ppt/pptx/odp`, `zip/rar/7z`, `txt`.
+- Oda ekranındaki **Dosya Ekle** butonu, sürükle-bırak veya yapıştırma ile eklenir; ilerleme çubuğu gösterilir.
+- Dosyalar 1 MB'lık parçalar halinde yüklenir; bu sayede hostingin `upload_max_filesize` sınırına takılmaz.
+- Güvenlik: uzantı beyaz listesi + dosya imzası (magic bytes) kontrolü, rastgele isimle `data/files/` altında saklama, `attachment` olarak indirme, oda silinince/süresi dolunca dosyalar da silinir.
 
 ### 🛡️ Sıfır Disk İzi (Zero-Storage RAM)
 - Veriler sunucu sabit diskine veya bir SQL veritabanına **asla kaydedilmez**.
@@ -251,7 +267,7 @@ Today, **Ulak** is a 100% free and open-source cross-device temporary clipboard 
 - 💻 **Smart Code Snippet Detection:** Formats programming code into sleek terminal boxes with dedicated copy buttons.
 - 📝 **LivePad Collaboration:** Real-time synchronized notepad with subtle neon author highlights.
 - 🔥 **Self-Destruct (TTL):** Burn on read (60s), 15m, 1h, 8h, 24h, or instant manual purge.
-- 🎛️ **Admin Dashboard (`/admin`):** Monitor active sessions, inspect RAM memory sizes, close/delete single or batch rooms (`admin`/`admin`).
+- 🎛️ **Admin Dashboard (`/admin`):** Monitor active sessions, inspect RAM memory sizes, close/delete single or batch rooms. Default login is `admin` / `admin`; you set your own password on first login. Credentials are stored only as a hash and can be changed from the panel.
 - 🛡️ **Zero Disk Footprint:** RAM-only storage. Nothing is saved to disks or databases.
 
 ### Installation Options
